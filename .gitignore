@@ -144,4 +144,5 @@ vite.config.ts.timestamp-*
 
 
 # Build output
-build/
+build/*
+!build/.gitkeep
