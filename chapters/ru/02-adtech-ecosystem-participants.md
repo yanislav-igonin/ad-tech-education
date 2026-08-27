@@ -267,7 +267,7 @@ Advertiser является экономическим источником medi
 3. Для чего publisher может использовать SSP и publisher ad server в одном flow, не считая их одной ролью?
 4. У Platform X один UI для buying, ad serving и attribution. Какие отдельные role cards нужно заполнить, прежде чем оценивать продукт?
 
-# Источники и дополнительное чтение
+## Источники и дополнительное чтение
 
 1. [IAB Tech Lab — Programmatic Auction Definitions](https://iabtechlab.com/programmatic-auction-definitions/)
 2. [UK Government — Online Advertising Programme consultation](https://www.gov.uk/government/consultations/online-advertising-programme-consultation/online-advertising-programme-consultation)

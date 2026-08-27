@@ -96,14 +96,26 @@ The main course is intentionally bounded. Deep ML bidding, advanced auction theo
 
 ## EPUB / Kindle path
 
-The Markdown hierarchy is well-suited to EPUB. A converter such as Pandoc can combine an ordered list of chapter files, YAML/front-matter metadata, and a book metadata file into EPUB 3 with a table of contents. Keep chapter ordering explicit; filesystem order alone should not define the book.
+Install Pandoc once on macOS:
+
+```bash
+brew install pandoc
+```
+
+Then build the current Russian EPUB with:
+
+```bash
+make epub
+```
+
+The Makefile passes both chapter files to Pandoc in explicit order. Each file's top-level `#` heading becomes a separate EPUB chapter, and `--toc` creates clickable navigation to chapters and their headings. Keep chapter ordering explicit; filesystem order alone should not define the book. Keep `# Источники и дополнительное чтение` as a `##` heading inside each chapter so it is not split into a separate EPUB chapter.
 
 Recommended build inputs later:
 
 ```text
 book.ru.yaml
 chapters/ru/01-what-is-adtech.md
-chapters/ru/02-market-participants.md
+chapters/ru/02-adtech-ecosystem-participants.md
 ...
 ```
 

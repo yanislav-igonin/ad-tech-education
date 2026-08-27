@@ -280,7 +280,7 @@ advertiser или publisher → service / SaaS fee → technology provider
 3. Для рекламы приложения по подписке нарисуйте отдельно поток creative, поток событий и поток денег. Какие стрелки не совпадут?
 4. Какая функция посредника может оправдать дополнительный hop, и в каком случае этот hop окажется лишним?
 
-# Источники и дополнительное чтение
+## Источники и дополнительное чтение
 
 1. [IAB Tech Lab — OpenRTB](https://iabtechlab.com/standards/openrtb/)
 2. [IAB Tech Lab — Supply Chain & Foundations](https://iabtechlab.com/standards/supply-chain-foundations/)
