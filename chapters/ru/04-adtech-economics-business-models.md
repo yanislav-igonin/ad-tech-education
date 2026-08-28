@@ -298,7 +298,6 @@ publisher payout share              = $68 / $100 = 68%
 | Transaction amount | Сколько начислено на конкретной contract boundary |
 | Retained amount | Какая часть flow остаётся у participant до его собственных costs |
 | Recognized revenue | Что reporting entity отражает как revenue по accounting policy |
-
 | Gross profit | Сколько осталось от recognized revenue после cost of revenue той же entity |
 | Gross margin | Какую долю recognized revenue составляет gross profit на той же accounting basis |
 | Invoice | Какой receivable/payable формально предъявлен counterparty; не доказывает ни revenue presentation, ни оплату |
