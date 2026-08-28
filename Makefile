@@ -4,7 +4,8 @@ EPUB := build/adtech-ru.epub
 CHAPTERS := \
 	chapters/ru/01-what-is-adtech.md \
 	chapters/ru/02-adtech-ecosystem-participants.md \
-	chapters/ru/03-core-advertising-metrics.md
+	chapters/ru/03-core-advertising-metrics.md \
+	chapters/ru/04-adtech-economics-business-models.md
 
 epub:
 	mkdir -p build
