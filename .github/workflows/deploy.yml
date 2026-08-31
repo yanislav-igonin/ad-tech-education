@@ -20,16 +20,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
-
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: site/package-lock.json
-
-      - name: Setup pandoc
-        uses: pandoc/actions/setup-action@v1
 
       - name: Install dependencies
         working-directory: site
