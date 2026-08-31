@@ -1,0 +1,92 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { getBook, href, navOf } from '../../lib/book';
+import Book from '../../layouts/Book.astro';
+
+export async function getStaticPaths() {
+  const { chapters } = await getBook();
+  return chapters.map((chapter) => ({ params: { slug: chapter.data.slug }, props: { chapter } }));
+}
+
+type Props = { chapter: CollectionEntry<'chapters'> };
+
+const { chapter } = Astro.props;
+const { chapters, parts } = await getBook();
+const { prev, next } = navOf(chapters, chapter);
+const { Content, headings } = await render(chapter);
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const partLabel = parts.find((p) => p.part === chapter.data.part)?.label ?? chapter.data.part;
+const byId = new Map(chapters.map((c) => [c.data.id, c]));
+---
+
+<Book title={`${chapter.data.title} — AdTech Education`} parts={parts} current={chapter}>
+  <article class="chapter">
+    <p class="chapter__crumb">{partLabel} · Глава {chapter.data.chapter}</p>
+    <div class="chapter__head">
+      <div>
+        <h1 class="chapter__title">{chapter.data.title}</h1>
+        <p class="chapter__meta">
+          Статус: {chapter.data.status}
+          {
+            chapter.data.prerequisites.length > 0 && (
+              <span>
+                {' '}· Пререквизиты:{' '}
+                {chapter.data.prerequisites.map((pid, i) => {
+                  const pre = byId.get(pid);
+                  return (
+                    <>
+                      {i > 0 && ', '}
+                      {pre ? <a href={href(pre)}>{pre.data.title}</a> : pid}
+                    </>
+                  );
+                })}
+              </span>
+            )
+          }
+        </p>
+      </div>
+      <label class="read-toggle">
+        <input type="checkbox" data-read-toggle={chapter.data.id} />
+        <span>Прочитано</span>
+      </label>
+    </div>
+
+    {
+      toc.length > 0 && (
+        <nav class="tocbox" aria-label="Содержание главы">
+          <p class="tocbox__title">Содержание главы</p>
+          <ul>
+            {toc.map((h) => (
+              <li style={`margin-left:${(h.depth - 2) * 1.2}rem`}>
+                <a href={`#${h.slug}`}>{h.text}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <nav class="pager">
+      {
+        prev && (
+          <a href={href(prev)}>
+            <small>← Глава {prev.data.chapter}</small>
+            <b>{prev.data.title}</b>
+          </a>
+        )
+      }
+      {
+        next && (
+          <a class="pager--next" href={href(next)}>
+            <small>Глава {next.data.chapter} →</small>
+            <b>{next.data.title}</b>
+          </a>
+        )
+      }
+    </nav>
+  </article>
+</Book>

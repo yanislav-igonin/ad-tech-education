@@ -1,0 +1,75 @@
+/* Print stylesheet for the combined book HTML (pandoc output). */
+:root {
+  --ink: #211c15;
+  --ink-soft: #5c5344;
+  --paper: #ffffff;
+  --hairline: #cccccc;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0 auto;
+  max-width: 42rem;
+  padding: 0 1rem;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Literata', Georgia, 'Times New Roman', serif;
+  font-size: 11pt;
+  line-height: 1.6;
+}
+
+header#title-block-header { text-align: center; margin: 2rem 0 3rem; }
+h1.title { font-size: 24pt; font-weight: 700; margin: 0 0 0.5rem; }
+p.subtitle, p.author, p.date { color: var(--ink-soft); margin: 0.2rem 0; }
+
+nav#TOC { page-break-after: always; border-bottom: 1px solid var(--hairline); padding-bottom: 2rem; margin-bottom: 2rem; }
+nav#TOC > ul { list-style: none; padding-left: 0; }
+nav#TOC ul ul { list-style: none; padding-left: 1.2rem; }
+nav#TOC li { margin: 0.25rem 0; }
+nav#TOC a { text-decoration: none; color: var(--ink); }
+
+h1 {
+  font-size: 18pt;
+  page-break-before: always;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 0.4rem;
+  margin-top: 0;
+}
+h2 { font-size: 14pt; margin: 1.6rem 0 0.6rem; page-break-after: avoid; }
+h3 { font-size: 12pt; margin: 1.2rem 0 0.5rem; page-break-after: avoid; }
+
+p { margin: 0 0 0.8rem; text-align: justify; hyphens: auto; }
+a { color: inherit; }
+strong { font-weight: 600; }
+
+blockquote {
+  margin: 1rem 0;
+  padding-left: 1rem;
+  border-left: 3px solid #b23a1e;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+pre {
+  background: #f5f2ec;
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  padding: 0.8rem 1rem;
+  font-family: 'JetBrains Mono', Menlo, monospace;
+  font-size: 8.5pt;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  page-break-inside: avoid;
+}
+code { font-family: 'JetBrains Mono', Menlo, monospace; font-size: 0.9em; }
+
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 9.5pt; page-break-inside: avoid; }
+th { text-align: left; border-bottom: 1.5px solid var(--ink); padding: 0.35rem 0.5rem; }
+td { border-bottom: 0.5px solid var(--hairline); padding: 0.35rem 0.5rem; vertical-align: top; }
+
+ul, ol { padding-left: 1.4rem; }
+li { margin-bottom: 0.25rem; }
+
+img { max-width: 100%; }

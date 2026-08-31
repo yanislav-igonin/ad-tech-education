@@ -146,3 +146,9 @@ vite.config.ts.timestamp-*
 # Build output
 build/*
 !build/.gitkeep
+# Astro site
+site/node_modules/
+site/dist/
+site/.astro/
+site/build/
+build/

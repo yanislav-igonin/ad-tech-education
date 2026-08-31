@@ -1,0 +1,52 @@
+---
+import { getBook, href, downloadHref } from '../lib/book';
+import Book from '../layouts/Book.astro';
+
+const { chapters, parts } = await getBook();
+---
+
+<Book title="AdTech Education — книга" parts={parts}>
+  <section class="home">
+    <p class="home__kicker">Учебник · редакция от {new Date().getFullYear()}</p>
+    <h1 class="home__title">AdTech: как устроены рекламные технологии</h1>
+    <p class="home__lede">
+      От участников экосистемы и базовых метрик — к механике рекламных кампаний.
+      Читайте последовательно или прыгайте к нужной главе: прогресс сохраняется в вашем браузере.
+    </p>
+
+    <div class="progress">
+      <span data-progress-total={chapters.length}>0 из {chapters.length}</span>
+      <div class="progress__bar"><div class="progress__fill" data-progress-fill></div></div>
+      <span>глав прочитано</span>
+    </div>
+
+    <p class="home__lede" style="display:flex; gap:0.8rem; margin-bottom:0;">
+      <a href={downloadHref('adtech-ru.epub')} download>Скачать EPUB</a>
+      <a href={downloadHref('adtech-ru.pdf')} download>Скачать PDF</a>
+    </p>
+
+    {
+      parts.map((p) => (
+        <>
+          <h2 class="toc-part">{p.label}</h2>
+          <ul class="toc">
+            {p.chapters.map((ch) => (
+              <li class="toc__item">
+                <div class="toc__row">
+                  <label class="read-toggle" aria-label={`Отметить главу «${ch.data.title}» прочитанной`}>
+                    <input type="checkbox" data-read-toggle={ch.data.id} />
+                  </label>
+                  <span class="toc__num">{ch.data.chapter}</span>
+                  <a class="toc__link" data-read-link={ch.data.id} href={href(ch)}>
+                    {ch.data.title}
+                  </a>
+                  {ch.data.status !== 'final' && <span class="toc__status">{ch.data.status}</span>}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </>
+      ))
+    }
+  </section>
+</Book>

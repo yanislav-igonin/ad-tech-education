@@ -1,0 +1,123 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import { href, downloadHref, type Chapter } from '../lib/book';
+
+interface Props {
+  title: string;
+  parts: { part: string; label: string; chapters: Chapter[] }[];
+  current?: Chapter | null;
+}
+
+const { title, parts, current = null } = Astro.props;
+const BASE = import.meta.env.BASE_URL;
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href={`${BASE}favicon.svg`} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,600&family=Literata:ital,opsz,wght@0,7..72,400..700;1,7..72,400&family=Golos+Text:wght@400..700&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <ClientRouter />
+  </head>
+  <body>
+    <aside class="spine">
+      <a class="spine__brand" href={BASE}>
+        <span>AdTech Education</span>
+        <b>Книга по рекламным технологиям</b>
+      </a>
+      {
+        parts.map((p) => (
+          <>
+            <p class="spine__part">{p.label}</p>
+            <ul class="spine__list">
+              {p.chapters.map((ch) => (
+                <li>
+                  <a
+                    class="spine__link"
+                    href={href(ch)}
+                    aria-current={current?.data.id === ch.data.id ? 'page' : undefined}
+                  >
+                    <span class="spine__num">{ch.data.chapter}</span>
+                    {ch.data.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </>
+        ))
+      }
+      <div class="spine__dl">
+        <a href={downloadHref('adtech-ru.epub')} download>EPUB</a>
+        <a href={downloadHref('adtech-ru.pdf')} download>PDF</a>
+      </div>
+    </aside>
+
+    <main class="page">
+      <slot />
+    </main>
+
+    <script>
+      const KEY = 'adtech-read';
+
+      type ReadMap = Record<string, boolean>;
+
+      function load(): ReadMap {
+        try {
+          return JSON.parse(localStorage.getItem(KEY) ?? '{}') as ReadMap;
+        } catch {
+          return {};
+        }
+      }
+
+      function save(map: ReadMap) {
+        localStorage.setItem(KEY, JSON.stringify(map));
+      }
+
+      function paint(map: ReadMap) {
+        const done = Object.values(map).filter(Boolean).length;
+        document.querySelectorAll<HTMLElement>('[data-read-toggle]').forEach((el) => {
+          const input = el as HTMLInputElement;
+          if (!(input instanceof HTMLInputElement)) return;
+          input.checked = Boolean(map[input.dataset.readToggle ?? '']);
+        });
+        document.querySelectorAll<HTMLElement>('[data-read-link]').forEach((el) => {
+          el.classList.toggle('is-done', Boolean(map[el.dataset.readLink ?? '']));
+        });
+        document.querySelectorAll<HTMLElement>('[data-progress-total]').forEach((el) => {
+          const total = Number(el.dataset.progressTotal);
+          el.textContent = `${done} из ${total}`;
+          const fill = el.parentElement?.querySelector<HTMLElement>('[data-progress-fill]');
+          if (fill) fill.style.width = total ? `${(done / total) * 100}%` : '0';
+        });
+      }
+
+      function init() {
+        document.querySelectorAll<HTMLInputElement>('[data-read-toggle]').forEach((input) => {
+          if (input.dataset.readBound) return;
+          input.dataset.readBound = '1';
+          input.addEventListener('change', () => {
+            const map = load();
+            const id = input.dataset.readToggle ?? '';
+            if (input.checked) map[id] = true;
+            else delete map[id];
+            save(map);
+            paint(map);
+          });
+        });
+        paint(load());
+      }
+
+      document.addEventListener('astro:page-load', init);
+      document.addEventListener('DOMContentLoaded', init);
+    </script>
+  </body>
+</html>
