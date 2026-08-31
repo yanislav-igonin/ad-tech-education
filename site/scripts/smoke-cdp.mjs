@@ -1,5 +1,5 @@
 // Minimal CDP smoke test: no puppeteer, node's built-in WebSocket only.
-const BASE = 'http://127.0.0.1:4321/ad-tech-education';
+const BASE = 'http://127.0.0.1:4321';
 const targets = await (await fetch('http://127.0.0.1:9223/json/list')).json();
 const target = targets.find((t) => t.type === 'page');
 const ws = new WebSocket(target.webSocketDebuggerUrl);

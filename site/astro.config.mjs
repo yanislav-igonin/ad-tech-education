@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 
-// GitHub Pages: https://yanislav-igonin.github.io/ad-tech-education/
+// Custom domain: https://adtech101.h0b0.dev/
 export default defineConfig({
-  site: 'https://yanislav-igonin.github.io',
-  base: '/ad-tech-education',
+  site: 'https://adtech101.h0b0.dev',
+  base: '/',
 });
