@@ -152,3 +152,4 @@ site/dist/
 site/.astro/
 site/build/
 build/
+site/public/downloads/
