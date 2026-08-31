@@ -143,11 +143,14 @@ const pdf = await send('Page.printToPDF', {
 const pdfPath = join(outDir, 'adtech-ru.pdf');
 writeFileSync(pdfPath, Buffer.from(pdf.data, 'base64'));
 console.log('PDF written:', pdfPath);
-
 ws.close();
 chrome.kill();
-rmSync(join(buildDir, 'chrome-profile'), { recursive: true, force: true });
-
+await new Promise((res) => chrome.on('exit', res));
+try {
+  rmSync(join(buildDir, 'chrome-profile'), { recursive: true, force: true });
+} catch {
+  // best-effort cleanup; profile is inside gitignored build/
+}
 function exists(p) {
   try {
     execFileSync('test', ['-x', p]);
