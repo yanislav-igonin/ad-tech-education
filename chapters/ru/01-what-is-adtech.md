@@ -92,13 +92,13 @@ AdTech появляется там, где рынок требует повто�
 
 MMP — специализированная категория providers для mobile measurement и attribution, а не синоним любой системы measurement.
 
-Стандарты и общие протоколы уменьшают число попарных интеграций: сторонам проще согласованно описывать inventory, передавать решения и понимать цепочку продавцов. Один из примеров — RTB, где отдельная opportunity может выставляться на торги в реальном времени. Но `RTB` — лишь один механизм внутри `programmatic`, то есть автоматизированной покупки и продажи; `programmatic` — лишь часть AdTech. Direct deals, reserved buying и закрытые platform ecosystems тоже используют AdTech.
+Стандарты и общие протоколы уменьшают число попарных интеграций: сторонам проще согласованно описывать inventory, передавать решения и понимать цепочку продавцов. Один из примеров — RTB (real-time bidding)[^g-rtb], где отдельная opportunity может выставляться на торги в реальном времени. Но `RTB` — лишь один механизм внутри `programmatic`, то есть автоматизированной покупки и продажи; `programmatic` — лишь часть AdTech. Direct deals, reserved buying и закрытые platform ecosystems тоже используют AdTech.
 
 ### Зачем нужны посредники
 
 **Intermediary** — участник, который соединяет стороны рынка или выполняет специализированную функцию. Посредники возникают не из-за потребности добавить больше компаний в цепочку, а из-за разделения задач:
 
-- agency управляет media-покупкой от имени advertiser;
+- agency[^g-agency] управляет media-покупкой от имени advertiser;
 - demand-side provider агрегирует доступ к supply и выполняет выбор для advertiser;
 - sell-side provider агрегирует покупателей и помогает publisher продавать inventory;
 - связующий слой передаёт opportunities и решения между сторонами;
@@ -142,8 +142,8 @@ Advertiser
 |---|---|---|
 | **Agency** | Сторона advertiser (`buy side`) | Планирует и выполняет покупку media для advertiser |
 | **DSP** | Сторона advertiser (`buy side`) | Автоматизирует покупку opportunities из нескольких supply sources |
-| **Ad network** | Между buyers и publishers | Агрегирует и упаковывает supply/demand как управляемое предложение |
-| **Ad exchange** | Связующий слой | Соединяет покупателей и продавцов для автоматизированной сделки |
+| **Ad network**[^g-ad-network] | Между buyers и publishers | Агрегирует и упаковывает supply/demand как управляемое предложение |
+| **Ad exchange**[^g-ad-exchange] | Связующий слой | Соединяет покупателей и продавцов для автоматизированной сделки |
 | **SSP** | Сторона publisher (`sell side`) | Помогает publisher управлять доступом покупателей к inventory |
 | **Ad server** | Сторона advertiser или publisher | Выбирает, доставляет и регистрирует рекламу по заданным правилам |
 | **Measurement provider**; специализированная mobile-категория — **MMP** | Поперёк цепочки | Измеряет рекламные события и outcomes; MMP специализируется на mobile acquisition и attribution |

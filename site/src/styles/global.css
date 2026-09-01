@@ -490,3 +490,52 @@ body {
   .page { margin-left: 0; }
   .home, .chapter { padding: 2.5rem 1.3rem 4rem; }
 }
+
+/* ---- Footnotes & glossary tooltip ---- */
+
+.prose .footnotes {
+  border-top: 1px solid var(--hairline);
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.prose sup a[data-footnote-ref] {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0 0.1em;
+}
+
+.glosstip {
+  position: absolute;
+  display: none;
+  max-width: 36rem;
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.18);
+  padding: 0.9rem 1.1rem;
+  z-index: 50;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.glosstip.is-open { display: block; }
+
+.glosstip p { margin: 0 0 0.5rem; }
+.glosstip p:last-of-type { margin-bottom: 0.3rem; }
+
+.glosstip__more {
+  color: var(--accent);
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+}
+
+/* ---- Glossary page ---- */
+
+.glossary-term { margin-bottom: 2rem; }
+.glossary-term h3 { margin: 0 0 0.5rem; }

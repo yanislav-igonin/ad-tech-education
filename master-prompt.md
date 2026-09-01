@@ -146,7 +146,7 @@ Planner должен:
 8. Выделить relevant misconceptions.
 9. Спланировать 4–9 смысловых секций, не создавая заголовок для каждого TOC item.
 
-Planner возвращает brief с learning objective, boundaries, research findings, terminology, structure, examples, misconceptions, coverage matrix и sources. Planner не пишет финальную главу.
+10. Сверить термины главы с `glossary.md`: существующие — в сноски `[^g-id]`, новые важные — добавить в глоссарий (см. «Глоссарий как единый источник терминов»).
 
 ### Stage B — Author
 
@@ -236,6 +236,28 @@ audits/
 Особенно явно различай:
 
 `DSP vs Ad Network`; `SSP vs Exchange`; `tracking vs attribution`; `attribution vs incrementality`; `MMP vs product analytics`; `identity vs tracking`; `CPM vs eCPM`; `spend vs revenue vs publisher payout`; `served vs rendered vs viewable impression`; `programmatic vs RTB`; `mediation vs header bidding`; `fraud detection vs verification`; `conversion window vs attribution/lookback window`; `first-party data vs first-party identity`.
+
+### Глоссарий как единый источник терминов
+
+Единый источник определений — `glossary.md` в корне репозитория. Он автоматически попадает в EPUB, PDF и на сайт; сноски в главах разворачиваются при сборке.
+
+Формат статьи термина:
+
+```markdown
+### Term (full name) {#g-term-id}
+
+**Term (full name)** — первая строка после заголовка является определением и попадает в сноску целиком.
+
+**Пример:** пример — только на странице глоссария, в сноску не входит.
+```
+
+Правила для любой главы:
+
+1. **Перед написанием** сверься с `glossary.md`: какие термины уже определены.
+2. Термин есть в глоссарии — при первом упоминании в главе ставь сноску `[^g-id]` (например, `[^g-rtb]`), краткое inline-объяснение не дублируй, если оно уже было в предыдущих главах.
+3. Важный новый термин, которого нет в глоссарии, — добавь статью в `glossary.md` в формате выше и поставь сноску при первом упоминании.
+4. Для глоссария используй только метки с префиксом `g-` ([^g-id]); обычные сноски главы остаются обычными.
+5. Глоссарий всегда должен оставаться полным и непротиворечивым: одно понятие — одна статья. Если существующее определение неточно, правь глоссарий, а не текст главы.
 
 ## 9. Команды
 

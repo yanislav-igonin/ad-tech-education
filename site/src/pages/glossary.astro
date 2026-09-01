@@ -1,0 +1,32 @@
+---
+import { getBook } from '../lib/book';
+import Book from '../layouts/Book.astro';
+import { glossaryTerms, glossaryTermHtml } from '../lib/glossary';
+
+const { parts } = await getBook();
+const terms = await Promise.all(
+  glossaryTerms().map(async (term) => ({ ...term, html: await glossaryTermHtml(term) })),
+);
+---
+
+<Book title="Глоссарий — AdTech Education" parts={parts}>
+  <article class="chapter">
+    <p class="chapter__crumb">Справочник</p>
+    <div class="chapter__head">
+      <h1 class="chapter__title">Глоссарий</h1>
+    </div>
+    <p class="chapter__meta">
+      Единый список определений курса. В главах термины помечены сноской — наведите на неё, чтобы увидеть определение.
+    </p>
+    <div class="prose">
+      {
+        terms.map((term) => (
+          <section class="glossary-term" id={`g-${term.id}`}>
+            <h3>{term.title}</h3>
+            <Fragment set:html={term.html} />
+          </section>
+        ))
+      }
+    </div>
+  </article>
+</Book>

@@ -30,6 +30,9 @@ const chapters = readdirSync(chaptersDir)
   .filter((f) => f.endsWith('.md'))
   .sort()
   .map((f) => join(chaptersDir, f));
+// Глоссарий — единый источник определений; идёт последним файлом книги.
+const glossary = join(rootDir, 'glossary.md');
+if (!chapters.includes(glossary)) chapters.push(glossary);
 
 if (chapters.length === 0) {
   console.error('No chapters found in', chaptersDir);
@@ -52,9 +55,10 @@ execFileSync(
     '--metadata', 'lang=ru',
     '--metadata', 'title=AdTech Education Materials',
     '--css=scripts/print.css',
+    '--lua-filter', join(rootDir, 'filters', 'glossary.lua'),
     '-o', bookHtml,
   ],
-  { cwd: siteDir, stdio: 'inherit' },
+  { cwd: siteDir, stdio: 'inherit', env: { ...process.env, GLOSSARY: join(rootDir, 'glossary.md') } },
 );
 
 // --- Launch Chrome with an ephemeral CDP port and talk raw DevTools protocol ---
