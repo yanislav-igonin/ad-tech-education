@@ -15,7 +15,7 @@ prerequisites: [ch-01]
 
 ## Суть: роли, а не коробки
 
-В первой главе мы увидели две экономические стороны рынка: `advertiser` создаёт demand, а `publisher` — supply. Между ними может быть много систем, но карта AdTech становится понятной, если смотреть не на названия компаний, а на **роли** — логические функции в рекламной сделке.
+В первой главе мы увидели две экономические стороны рынка: `advertiser`[^g-advertiser] создаёт demand[^g-demand], а `publisher`[^g-publisher] — supply[^g-supply]. Между ними может быть много систем, но карта AdTech[^g-adtech] становится понятной, если смотреть не на названия компаний, а на **роли** — логические функции в рекламной сделке.
 
 `Role`, `company` и `product` — разные уровни:
 
@@ -23,7 +23,7 @@ prerequisites: [ch-01]
 - **company** — организация, с которой заключают договор и которая может выполнять несколько ролей;
 - **product** — конкретное предложение этой компании: UI, API, managed service или набор инструментов.
 
-Поэтому логотип нельзя поставить в единственную клетку карты навсегда. Один product suite может одновременно покупать media, продавать доступ к inventory, доставлять рекламу и строить отчётность. И наоборот, одну роль advertiser может распределить между собственной командой и несколькими providers.
+Поэтому логотип нельзя поставить в единственную клетку карты навсегда. Один product suite может одновременно покупать media, продавать доступ к inventory[^g-inventory], доставлять рекламу и строить отчётность. И наоборот, одну роль advertiser может распределить между собственной командой и несколькими providers.
 
 Для разбора любой роли используйте одну карточку:
 
@@ -37,9 +37,9 @@ prerequisites: [ch-01]
 | Какое решение принимается или исполняется? | Реальная работа, а не marketing label |
 | Как движутся деньги? | Media money, отдельная fee или отсутствие платежа в этом flow |
 
-Customer, beneficiary и payer могут не совпадать. Например, media buyer работает в UI платформы, пользу получает advertiser, а invoice может оплачивать agency. Эта разница особенно важна при чтении договоров, data flows и отчётов.
+Customer, beneficiary и payer могут не совпадать. Например, media buyer[^g-media-buyer] работает в UI платформы, пользу получает advertiser, а invoice может оплачивать agency[^g-agency]. Эта разница особенно важна при чтении договоров, data flows и отчётов.
 
-Заполним карточку для главного экономического участника. Advertiser хочет изменить знание или поведение аудитории, финансирует campaign, передаёт цель, бюджет и рекламные материалы и получает outcomes и отчётность. **Creative** — сам рекламный материал: например, изображение, видео или текст. Advertiser обычно является beneficiary и источником денег, но операционную работу и оплату конкретных счетов может делегировать agency.
+Заполним карточку для главного экономического участника. Advertiser хочет изменить знание или поведение аудитории, финансирует campaign[^g-campaign], передаёт цель, бюджет и рекламные материалы и получает outcomes и отчётность. **Creative**[^g-creative] — сам рекламный материал: например, изображение, видео или текст. Advertiser обычно является beneficiary и источником денег, но операционную работу и оплату конкретных счетов может делегировать agency.
 
 Такой разбор полезнее линейной схемы из семнадцати обязательных коробок: в конкретной campaign некоторых ролей не будет, а несколько других скроются за одним договором.
 
@@ -51,23 +51,23 @@ Customer, beneficiary и payer могут не совпадать. Наприм�
 
 Отсюда появляются две рекламные ориентации:
 
-- **brand advertising** в первую очередь меняет awareness, consideration или perception — знание, рассмотрение и отношение к продукту;
-- **performance advertising** управляется вокруг измеримого действия или outcome и стоимости его получения: регистрации, trial, установки или покупки.
+- **brand advertising**[^g-brand-advertising] в первую очередь меняет awareness, consideration или perception — знание, рассмотрение и отношение к продукту;
+- **performance advertising**[^g-performance-advertising] управляется вокруг измеримого действия или outcome и стоимости его получения: регистрации, trial, установки или покупки.
 
 Это не два взаимоисключающих вида компаний. Один subscription app может одновременно показывать video campaign для знакомства с брендом и acquisition campaign, оптимизированную на trial. Более того, один пользователь может сначала познакомиться с продуктом через brand-рекламу, а позже отреагировать на performance-рекламу. Различаются прежде всего цель, горизонт оценки и ожидаемые доказательства результата.
 
-**Publisher** — организация, которая владеет или управляет media-средой, где возникают рекламные opportunities: сайтом, приложением, игрой или видеосервисом. Publisher задаёт placements и правила показа, предоставляет контекст и доступ к inventory, получает сведения о delivery и зарабатывает publisher revenue. Его интерес — продать opportunities достаточно выгодно, сохранив качество продукта и опыт user.
+**Publisher** — организация, которая владеет или управляет media-средой, где возникают рекламные opportunities[^g-ad-opportunity]: сайтом, приложением, игрой или видеосервисом. Publisher задаёт placements[^g-placement] и правила показа, предоставляет контекст и доступ к inventory, получает сведения о delivery и зарабатывает publisher revenue[^g-publisher-revenue]. Его интерес — продать opportunities достаточно выгодно, сохранив качество продукта и опыт user.
 
 Между бизнес-целью advertiser и технической покупкой часто стоят люди и сервисные организации:
 
 - **agency** — компания-подрядчик, которая планирует или выполняет marketing- и media-работу от имени advertiser. Она может разрабатывать стратегию, готовить creatives, выбирать каналы, запускать campaigns, вести отчётность и иногда управлять платежами;
 - **media buyer** — человек, команда или функция, которая выбирает media, platforms и условия покупки, распределяет spend и настраивает campaigns. Media buyer может работать внутри advertiser, внутри agency или другой buying organization.
 
-Agency и media buyer — не синонимы: первая является организацией и contractual role, второй — операционной функцией. Media buyer также не является DSP: человек формулирует и настраивает решения, а DSP исполняет часть buying workflow в масштабе.
+Agency и media buyer — не синонимы: первая является организацией и contractual role, второй — операционной функцией. Media buyer также не является DSP[^g-dsp]: человек формулирует и настраивает решения, а DSP исполняет часть buying workflow в масштабе.
 
 | Роль | Проблема и beneficiary | Типичный payer | Data in | Решение или output |
 |---|---|---|---|---|
-| Advertiser | Достичь business outcome; пользу получает сам advertiser | Источник media spend и многих service fees | Бизнес-цель, ограничения, customer data | Цель campaign, бюджет, критерии успеха |
+| Advertiser | Достичь business outcome; пользу получает сам advertiser | Источник media spend[^g-media-spend] и многих service fees | Бизнес-цель, ограничения, customer data | Цель campaign, бюджет, критерии успеха |
 | Publisher | Монетизировать media environment; пользу получает publisher | Обычно не payer в media sale; может платить technology providers | Placements, контекст, inventory rules | Доступные opportunities, delivery rules, publisher revenue |
 | Agency | Выполнить работу, для которой advertiser не строит команду или экспертизу | Advertiser; иногда agency выступает плательщиком по downstream invoices | Brief, бюджет, creatives, результаты | План, настройки, execution и отчётность |
 | Media buyer | Превратить цель и бюджет в конкретные покупки | Не отдельный payer как функция; оплачивается employer/client | Campaign goals, доступные каналы, reports | Выбор media и platforms, allocation и настройки |
@@ -89,15 +89,15 @@ advertiser ad server и publisher ad server могут поддерживать 
 ни одна строка не является обязательным универсальным pipeline.
 ```
 
-**Ad network** агрегирует supply и/или demand и продаёт управляемое media offering. Покупатель обычно выбирает доступное предложение, цель и ограничения, а network берёт на себя заметную часть распределения трафика и отношений с publishers. Network может принимать media money и рассчитываться с supply partners; конкретная коммерческая модель зависит от договора.
+**Ad network**[^g-ad-network] агрегирует supply и/или demand и продаёт управляемое media offering. Покупатель обычно выбирает доступное предложение, цель и ограничения, а network берёт на себя заметную часть распределения трафика и отношений с publishers. Network может принимать media money и рассчитываться с supply partners; конкретная коммерческая модель зависит от договора.
 
 **DSP (Demand-Side Platform)** — buying platform, которая помогает media buyer оценивать и покупать opportunities из нескольких supply sources по правилам campaigns. Customer — advertiser, agency или другой buyer. DSP получает campaign settings, creatives и доступные signals opportunity, принимает или исполняет решения о покупке и возвращает результаты и reporting. В сравнении с managed network offering DSP обычно даёт buyer больше campaign-level control, но реальные products могут сочетать обе модели.
 
-**SSP (Supply-Side Platform)** — sell-side platform для publisher. Она описывает доступные opportunities, предоставляет demand sources доступ к inventory и помогает управлять его продажей. SSP получает inventory rules и context signals со стороны publisher, передаёт допустимое описание opportunity buyers и возвращает решение о продаже и связанные metadata. Publisher — основной customer и beneficiary, хотя SSP нередко получает свою оплату в рамках settlement media.
+**SSP (Supply-Side Platform)**[^g-ssp] — sell-side platform для publisher. Она описывает доступные opportunities, предоставляет demand sources доступ к inventory и помогает управлять его продажей. SSP получает inventory rules и context signals со стороны publisher, передаёт допустимое описание opportunity buyers и возвращает решение о продаже и связанные metadata. Publisher — основной customer и beneficiary, хотя SSP нередко получает свою оплату в рамках settlement media.
 
-**Ad exchange** — transaction layer или функция, которая соединяет buyers и sellers и выполняет matching либо auction. Exchange не обязательно является отдельной компанией между DSP и SSP: exchange- и SSP-функции часто объединены в одном продукте. Полезное различие такое: SSP представляет sell-side workflow publisher, а exchange выполняет саму функцию автоматизированной сделки между сторонами.
+**Ad exchange**[^g-ad-exchange] — transaction layer или функция, которая соединяет buyers и sellers и выполняет matching либо auction. Exchange не обязательно является отдельной компанией между DSP и SSP: exchange- и SSP-функции часто объединены в одном продукте. Полезное различие такое: SSP представляет sell-side workflow publisher, а exchange выполняет саму функцию автоматизированной сделки между сторонами.
 
-**Ad server** выбирает, доставляет и регистрирует рекламу по заданным campaign- или inventory-правилам. Это не просто CDN с файлами: CDN может отдать bytes creative, а ad server применяет правила и создаёт наблюдаемую точку delivery.
+**Ad server**[^g-ad-server] выбирает, доставляет и регистрирует рекламу по заданным campaign- или inventory-правилам. Это не просто CDN с файлами: CDN может отдать bytes creative, а ad server применяет правила и создаёт наблюдаемую точку delivery.
 
 - Advertiser ad server помогает стороне buyer управлять creatives, их доставкой и регистрацией событий независимо от конкретного места покупки.
 - Publisher ad server сопоставляет доступные demand sources и управляет delivery на inventory publisher.
@@ -116,13 +116,13 @@ advertiser ad server и publisher ad server могут поддерживать 
 
 ## Кто измеряет и проверяет
 
-Платформа, продавшая или купившая media, видит только собственные measurement points и одновременно заинтересована в результате сделки. Поэтому advertiser и publisher могут подключать поперечные providers. Они не стоят обязательными hops в пути creative: их integrations получают события и возвращают отдельные выводы.
+Платформа, продавшая или купившая media, видит только собственные measurement[^g-measurement] points и одновременно заинтересована в результате сделки. Поэтому advertiser и publisher могут подключать поперечные providers. Они не стоят обязательными hops в пути creative: их integrations получают события и возвращают отдельные выводы.
 
-**Attribution provider** сопоставляет доступные рекламные touchpoints — например, impression или click — с outcomes вроде регистрации или покупки и применяет правила назначения credit. Результат отвечает на вопрос «какому источнику по выбранным правилам приписана эта conversion?», а не «была ли реклама истинной причиной действия?» Attribution не доказывает causality.
+**Attribution provider**[^g-attribution] сопоставляет доступные рекламные touchpoints — например, impression[^g-impression] или click — с outcomes вроде регистрации или покупки и применяет правила назначения credit. Результат отвечает на вопрос «какому источнику по выбранным правилам приписана эта conversion?», а не «была ли реклама истинной причиной действия?» Attribution не доказывает causality.
 
-**MMP (Mobile Measurement Partner)** — mobile-specialized категория measurement и attribution providers для app acquisition, installs и in-app outcomes. У конкретных MMP могут быть функции для других сред и analytics, но основная роль здесь — сопоставлять доступные acquisition signals с событиями приложения и давать advertiser согласованное представление across media sources. MMP не является синонимом product analytics: product analytics прежде всего изучает поведение внутри продукта, тогда как MMP связывает acquisition с рекламными источниками. Технические детали SDK, install matching, postbacks и platform privacy restrictions относятся к главам 27–29.
+**MMP (Mobile Measurement Partner)**[^g-mmp] — mobile-specialized категория measurement и attribution providers для app acquisition, installs и in-app outcomes. У конкретных MMP могут быть функции для других сред и analytics, но основная роль здесь — сопоставлять доступные acquisition signals с событиями приложения и давать advertiser согласованное представление across media sources. MMP не является синонимом product analytics: product analytics прежде всего изучает поведение внутри продукта, тогда как MMP связывает acquisition с рекламными источниками. Технические детали SDK, install matching, postbacks и platform privacy restrictions относятся к главам 27–29.
 
-**Verification provider** создаёт отдельную точку оценки условий и качества доставки рекламы. В зависимости от интеграции он может анализировать доступные delivery, render, placement, context и quality signals и возвращать verification results рекламодателю, publisher или platform. Verification шире одной fraud detection: вопросы могут относиться также к среде и условиям показа. Но отдельный provider не является абсолютной истиной — полнота вывода зависит от среды, доступных signals и методологии.
+**Verification provider**[^g-verification] создаёт отдельную точку оценки условий и качества доставки рекламы. В зависимости от интеграции он может анализировать доступные delivery, render, placement, context и quality signals и возвращать verification results рекламодателю, publisher или platform. Verification шире одной fraud detection: вопросы могут относиться также к среде и условиям показа. Но отдельный provider не является абсолютной истиной — полнота вывода зависит от среды, доступных signals и методологии.
 
 Для одной рекламы приложения системы могут получить частично пересекающиеся события:
 
@@ -142,10 +142,10 @@ Reports могут различаться не только из-за ошибк
 
 | Роль | Customer и inputs | Persistent state | Output / activation | Чего роль сама по себе не делает |
 |---|---|---|---|---|
-| **Data provider** | Advertiser, publisher или platform; собственные либо собранные datasets | Dataset, attributes или segments | Данные для разрешённых activation, decisioning или analysis | Не обязана хранить customer record заказчика или принимать media decision |
-| **DMP** | Advertising/marketing team; audience data и campaign signals | Audience profiles и segments в выбранной модели продукта | Segmentation и activation через рекламные integrations | Не обязана быть system of record для полного customer lifecycle |
-| **CDP** | Advertiser; first-party events и customer data из product, CRM и других systems | Persistent unified customer record | Доступные downstream systems customer profiles, events и segments | Не обязана покупать media или назначать attribution credit |
-| **Identity provider** | Advertiser, publisher или platform; identifiers из разрешённых источников | Mapping или identity graph в рамках конкретного решения | Связанные или переведённые identifiers для activation и measurement | Не создаёт consent, не регистрирует все events и не доказывает identity реального человека |
+| **Data provider**[^g-data-provider] | Advertiser, publisher или platform; собственные либо собранные datasets | Dataset, attributes или segments | Данные для разрешённых activation, decisioning или analysis | Не обязана хранить customer record заказчика или принимать media decision |
+| **DMP**[^g-dmp] | Advertising/marketing team; audience data и campaign signals | Audience profiles и segments в выбранной модели продукта | Segmentation и activation через рекламные integrations | Не обязана быть system of record для полного customer lifecycle |
+| **CDP**[^g-cdp] | Advertiser; first-party events и customer data из product, CRM и других systems | Persistent unified customer record | Доступные downstream systems customer profiles, events и segments | Не обязана покупать media или назначать attribution credit |
+| **Identity provider**[^g-identity-provider] | Advertiser, publisher или platform; identifiers из разрешённых источников | Mapping или identity graph в рамках конкретного решения | Связанные или переведённые identifiers для activation и measurement | Не создаёт consent, не регистрирует все events и не доказывает identity реального человека |
 
 **Data provider** продаёт или предоставляет datasets, attributes либо audience segments. Customer платит за дополнительный signal: например, классификацию контекста или audience attribute, который можно законно и технически использовать. Качество, provenance и допустимые use cases таких данных важны, но их глубокая проверка выходит за рамки этой главы.
 

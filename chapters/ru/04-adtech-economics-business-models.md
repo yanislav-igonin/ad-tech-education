@@ -15,20 +15,20 @@ prerequisites: [ch-01, ch-02, ch-03]
 
 ## Суть: цена следует договору, а не label в dashboard
 
-`CPM`, `CPC` или `CPA` в интерфейсе ещё не объясняет, за что платят. Один и тот же label может быть договорной ценой, `bid`, целью optimization или фактическим средним после событий. Денежное обязательство создаёт договорная **pricing basis** вместе с определением **billable event** — qualifying-события, после которого можно начислить сумму. Даже auction win сам по себе не обязан быть billable.
+`CPM`[^g-cpm], `CPC`[^g-cpc] или `CPA`[^g-cpa] в интерфейсе ещё не объясняет, за что платят. Один и тот же label может быть договорной ценой, `bid`, целью optimization или фактическим средним после событий. Денежное обязательство создаёт договорная **pricing basis**[^g-pricing-basis] вместе с определением **billable event**[^g-billable-event] — qualifying-события, после которого можно начислить сумму. Даже auction win[^g-win-rate] сам по себе не обязан быть billable.
 
 Чтобы прочитать экономику сделки, разложите её на шесть независимых слоёв:
 
 | Слой | Главный вопрос | Пример |
 |---|---|---|
-| Contractual pricing | За какую basis договорились платить? | `$10 CPM` за тысячу qualifying impressions |
+| Contractual pricing | За какую basis договорились платить? | `$10 CPM` за тысячу qualifying impressions[^g-impression] |
 | Billing | Какое событие создаёт charge и какую сумму? | Render или иной billing signal по contract policy |
 | Optimization | Какой outcome меняет будущие решения системы? | `target CPA` по подписке |
 | Participant ledger | Для кого сумма является spend, cost, payout или retained amount? | `$100` spend advertiser; `$80` media cost посредника |
 | Accounting presentation | Что конкретная entity признаёт revenue и cost? | Gross или net presentation |
 | Settlement | Когда начисление стало invoice, а обязательство — cash? | Month-end invoice, оплаченный позже |
 
-**Pricing basis** — договорное правило расчёта цены: за impression, click, action, долю proceeds, период доступа к software или иной согласованный объект. **Billable amount** — начисленная по этому правилу сумма после counts, rates, validation и договорных adjustments. Она ещё не обязательно выставлена в invoice, признана как revenue или оплачена cash.
+**Pricing basis** — договорное правило расчёта цены: за impression, click[^g-click], action, долю proceeds[^g-proceeds], период доступа к software или иной согласованный объект. **Billable amount** — начисленная по этому правилу сумма после counts, rates, validation и договорных adjustments. Она ещё не обязательно выставлена в invoice, признана как revenue или оплачена cash.
 
 Эта декомпозиция объясняет всю главу: стороны выбирают не красивую метрику, а boundary наблюдаемого события, цену и распределение риска; затем каждая сторона записывает результат в собственный ledger.
 
@@ -44,15 +44,15 @@ opportunity → qualifying impression → qualifying click → install/lead/acti
 
 | Pricing model | Договорный billable event | Риск payee до charge | Риск advertiser после charge | Что обязательно определить |
 |---|---|---|---|---|
-| **CPM** | Тысяча qualifying impressions | Получить и подтвердить выбранный impression event | Click, conversion и последующая ценность могут не возникнуть | `served`, `rendered`, `viewable` или иная impression basis; filters и count owner |
+| **CPM** | Тысяча qualifying impressions | Получить и подтвердить выбранный impression event | Click, conversion[^g-conversion] и последующая ценность могут не возникнуть | `served`, `rendered`, `viewable`[^g-viewable-impression] или иная impression basis; filters и count owner |
 | **CPC** | Qualifying click | Impressions могут не привести к click | Click может оказаться некачественным и не дать conversion | Click point, user initiation, deduplication, invalid-click filters |
-| **CPA** | Согласованный action, например оплаченная подписка | Довести user до action и получить valid attribution/validation | Action может иметь низкую margin, retention или lifetime value | Точное имя action, attribution rule, validator, approval state |
-| **CPI** | Valid attributed install | Delivery и clicks могут не привести к засчитанному install | Install может не запуститься, не удержаться и не монетизироваться | Install definition, attribution/validation owner, reinstall policy |
-| **CPL** | Qualifying lead | Traffic может не породить принятый lead | Lead может не пройти дальнейшую qualification или не стать customer | Поля и criteria lead, duplicate/rejection rules, кто принимает lead |
+| **CPA** | Согласованный action, например оплаченная подписка | Довести user до action и получить valid attribution[^g-attribution]/validation | Action может иметь низкую margin, retention или lifetime value[^g-ltv] | Точное имя action, attribution rule, validator, approval state |
+| **CPI**[^g-cpi] | Valid attributed install | Delivery и clicks могут не привести к засчитанному install | Install может не запуститься, не удержаться и не монетизироваться | Install definition, attribution/validation owner, reinstall policy |
+| **CPL**[^g-cpl] | Qualifying lead | Traffic может не породить принятый lead | Lead может не пройти дальнейшую qualification или не стать customer | Поля и criteria lead, duplicate/rejection rules, кто принимает lead |
 
-Для CPM seller получает право на charge раньше воронки, поэтому advertiser принимает большую часть post-impression performance risk. Для CPC payee принимает impression-to-click risk, а advertiser — post-click risk. В CPA/CPI/CPL payee принимает больше delivery, conversion и measurement risk до глубокого события; advertiser сохраняет риск качества и монетизации результата. Fraud, attribution disputes и caps могут менять accepted count, но их mechanics рассматриваются позднее.
+Для CPM seller получает право на charge раньше воронки, поэтому advertiser[^g-advertiser] принимает большую часть post-impression performance risk. Для CPC payee принимает impression-to-click risk, а advertiser — post-click risk. В CPA/CPI/CPL payee принимает больше delivery, conversion и measurement[^g-measurement] risk до глубокого события; advertiser сохраняет риск качества и монетизации результата. Fraud, attribution disputes и caps могут менять accepted count, но их mechanics рассматриваются позднее.
 
-`Billable event` задаётся contract policy, а не протоколом автоматически. В programmatic flow IAB Tech Lab различает auction win и событие, после которого auction становится billable. OpenRTB также разделяет win notice (`nurl`) и billing notice (`burl`): win не гарантирует delivery, а billing signal зависит от policy publisher или exchange. Это programmatic-пример общего правила, не универсальный contract для любой рекламы.
+`Billable event` задаётся contract policy, а не протоколом автоматически. В programmatic[^g-programmatic] flow IAB Tech Lab различает auction win и событие, после которого auction становится billable. OpenRTB также разделяет win notice (`nurl`) и billing notice (`burl`): win не гарантирует delivery, а billing signal зависит от policy publisher[^g-publisher] или exchange[^g-ad-exchange]. Это programmatic-пример общего правила, не универсальный contract для любой рекламы.
 
 Одинаковый учебный billable amount `$100` можно получить по пяти **альтернативным**, а не одновременным договорам:
 
@@ -76,36 +76,36 @@ billing basis:       CPC за qualifying click
 realised metrics:    observed CPM, CPC и CPA после периода
 ```
 
-Здесь `target CPA` не превращает договор в CPA billing. `Bid` также выражает decision input или willingness to pay, а не доказывает фактический charge. Payment model устанавливает contract; realized average описывает уже случившееся; optimization target влияет на будущие decisions.
+Здесь `target CPA` не превращает договор в CPA billing. `Bid` также выражает decision input или willingness to pay, а не доказывает фактический charge. Payment model устанавливает contract; realized average описывает уже случившееся; optimization target[^g-optimization-target] влияет на будущие decisions.
 
 ## Как зарабатывают intermediaries и software providers
 
-Посредник может удерживать часть media transaction, перепродавать media с надбавкой или получать отдельную оплату за service/software. Эти модели нельзя складывать, пока не известны contract boundary и calculation base.
+Посредник[^g-intermediary] может удерживать часть media transaction, перепродавать media с надбавкой или получать отдельную оплату за service/software. Эти модели нельзя складывать, пока не известны contract boundary и calculation base.
 
 | Модель | Кто платит | Правило расчёта | Связь с media dollar | Основной риск или caveat |
 |---|---|---|---|---|
-| **Revenue share** | Сторона, передающая proceeds по договору | Доля от named revenue/proceeds base за период | Обычно делит сумму на конкретной media boundary | Base, допустимые deductions и adjustments должны быть названы |
-| **Fixed fee** | Клиент service provider | Заранее согласованная сумма за period, scope или deliverable | Может быть полностью отдельной | Provider несёт risk, что scope потребует больше работы |
-| **SaaS pricing** | Customer software platform | Subscription, seats, usage tier или processed volume | Обычно отдельный software/service flow | Usage event не становится media event автоматически |
-| **Markup** | Buyer платит selling price посреднику | Spread относительно acquisition/base cost | Да, если посредник перепродаёт media | Percentage растёт от cost denominator, не от selling amount |
-| **Take rate** | Зависит от boundary | Retained amount / named transaction flow | Обычно характеризует удержание на выбранной boundary | Без numerator, denominator и included fees ставка несравнима |
+| **Revenue share**[^g-revenue-share] | Сторона, передающая proceeds по договору | Доля от named revenue/proceeds base за период | Обычно делит сумму на конкретной media boundary | Base, допустимые deductions и adjustments должны быть названы |
+| **Fixed fee**[^g-fixed-fee] | Клиент service provider | Заранее согласованная сумма за period, scope или deliverable | Может быть полностью отдельной | Provider несёт risk, что scope потребует больше работы |
+| **SaaS pricing**[^g-saas-pricing] | Customer software platform | Subscription, seats, usage tier или processed volume | Обычно отдельный software/service flow | Usage event не становится media event автоматически |
+| **Markup**[^g-markup] | Buyer платит selling price посреднику | Spread относительно acquisition/base cost | Да, если посредник перепродаёт media | Percentage растёт от cost denominator, не от selling amount |
+| **Take rate**[^g-take-rate] | Зависит от boundary | Retained amount / named transaction flow | Обычно характеризует удержание на выбранной boundary | Без numerator, denominator и included fees ставка несравнима |
 
 ### Revenue share: процент без базы не определён
 
 **Proceeds** — сумма transaction inflow до согласованного распределения на выбранной boundary. **Revenue share** — договорное распределение названной revenue или proceeds base. Договор должен ответить: чьи proceeds, на какой boundary, за какой период, до или после каких agreed adjustments и кто выполняет расчёт.
 
-В основном примере SSP получает на своей boundary `$80 gross proceeds` и по seller contract удерживает 15%:
+В основном примере SSP[^g-ssp] получает на своей boundary `$80 gross proceeds` и по seller contract удерживает 15%:
 
 ```text
 SSP retained amount = $12 / $80 SSP-boundary proceeds = 15%
 publisher share      = $68 / $80 SSP-boundary proceeds = 85%
 ```
 
-Numerator первого процента — `$12`, denominator — `$80`. Это не 15% исходного advertiser spend `$100`: относительно исходных `$100` те же `$12` составляют 12%. Слово `gross` здесь описывает transaction base до split, а не автоматически `gross revenue` в финансовой отчётности.
+Numerator первого процента — `$12`, denominator — `$80`. Это не 15% исходного advertiser spend `$100`: относительно исходных `$100` те же `$12` составляют 12%. Слово `gross` здесь описывает transaction base до split, а не автоматически `gross revenue`[^g-gross-net-revenue] в финансовой отчётности.
 
 ### Markup, spread и take rate
 
-**Spread** — абсолютная разница между selling amount и acquisition/downstream amount на названной boundary. Если managed network покупает media за `$80` и продаёт advertiser за `$100`, spread равен `$20`.
+**Spread**[^g-spread] — абсолютная разница между selling amount и acquisition/downstream amount на названной boundary. Если managed network[^g-ad-network] покупает media за `$80` и продаёт advertiser за `$100`, spread равен `$20`.
 
 **Markup** измеряет надбавку к base cost:
 
@@ -119,25 +119,25 @@ network markup = $20 spread / $80 acquisition cost = 25%
 network take rate = $20 retained / $100 advertiser spend = 20%
 ```
 
-`25% markup` и `20% take rate` описывают один `$20 spread` с разными denominators. Ни один процент нельзя сравнивать с чужой ставкой без participant boundary, numerator, denominator и перечня включённых fees. `Markup` также не равен gross margin: gross margin использует accounting revenue и cost of revenue, а не произвольно выбранные buy/sell amounts.
+`25% markup` и `20% take rate` описывают один `$20 spread` с разными denominators. Ни один процент нельзя сравнивать с чужой ставкой без participant boundary, numerator, denominator и перечня включённых fees. `Markup` также не равен gross margin[^g-gross-margin]: gross margin использует accounting revenue и cost of revenue[^g-cost-of-revenue], а не произвольно выбранные buy/sell amounts.
 
 ### SaaS sidecar: отдельные `$2,000/month`
 
-Допустим, advertiser платит ad server или measurement platform фиксированные `$2,000/month` за software access и usage tier. Эта сумма:
+Допустим, advertiser платит ad server[^g-ad-server] или measurement platform фиксированные `$2,000/month` за software access и usage tier. Эта сумма:
 
 - является service/software charge по отдельному договору;
 - не вычитается из учебных `$100 media flow`;
-- не становится publisher payout или intermediary take rate;
+- не становится publisher payout[^g-publisher-revenue] или intermediary take rate;
 - может зависеть от числа обработанных impressions, но от этого не становится CPM-покупкой inventory.
 
 Включать `$2,000` в media dollar можно только если конкретный договор действительно объединяет эти charges. Иначе получатся два money flows: media transaction и SaaS subscription.
 
 ## Одна сделка, разные ledgers и моменты времени
 
-**Ledger** — записи конкретной entity о начисленных суммах и обязательствах. Один transaction не имеет единственного нейтрального денежного label: вход одной стороны является выходом другой, а промежуточная entity одновременно продаёт upstream и покупает downstream.
+**Ledger**[^g-ledger-boundary] — записи конкретной entity о начисленных суммах и обязательствах. Один transaction не имеет единственного нейтрального денежного label: вход одной стороны является выходом другой, а промежуточная entity одновременно продаёт upstream и покупает downstream.
 
-- **Advertiser spend** — сумма, начисленная advertiser за выбранный media/service scope. Dashboard может включать или исключать platform/data fees, taxes, credits и adjustments; scope нужно назвать.
-- **Media cost** — стоимость приобретённого media для конкретной entity. Для advertiser в нашем узком примере это `$100`; для network downstream acquisition cost равен `$80`. Поэтому `media cost` без owner не определён.
+- **Advertiser spend**[^g-media-spend] — сумма, начисленная advertiser за выбранный media/service scope. Dashboard может включать или исключать platform/data fees, taxes, credits и adjustments; scope нужно назвать.
+- **Media cost**[^g-cost] — стоимость приобретённого media для конкретной entity. Для advertiser в нашем узком примере это `$100`; для network downstream acquisition cost равен `$80`. Поэтому `media cost` без owner не определён.
 - **Publisher payout** — сумма, которую по seller contract должны перечислить publisher после share, fees и adjustments. Для SSP это payable; для publisher — receivable и часть его economics, а признание revenue следует его policy.
 
 **Receivable** — сумма, которую counterparty должна entity. **Payable** — сумма, которую entity должна поставщику или другой стороне. Эти слова описывают направление обязательства, не момент cash movement.
@@ -179,9 +179,9 @@ advertiser → $100 → network → $80 → SSP → $68 → publisher
 
 ## Gross/net revenue и gross margin: отдельная accounting boundary
 
-**Reporting entity** — компания, чью финансовую отчётность мы читаем. **Recognized revenue** — сумма, которую она отражает как revenue по применимой accounting policy; это не любой invoice, collection или cash inflow. **Gross billings** — более широкая сумма, выставленная клиентам или прошедшая через collection до исключения supplier components; gross billings не являются synonym recognized revenue.
+**Reporting entity** — компания, чью финансовую отчётность мы читаем. **Recognized revenue**[^g-revenue] — сумма, которую она отражает как revenue по применимой accounting policy; это не любой invoice, collection или cash inflow. **Gross billings**[^g-gross-billings] — более широкая сумма, выставленная клиентам или прошедшая через collection до исключения supplier components; gross billings не являются synonym recognized revenue.
 
-`Gross revenue` и `net revenue` — не «деньги до расходов» и «деньги после расходов». Presentation зависит от того, является ли entity **principal** или **agent** относительно конкретного обещанного товара или service:
+`Gross revenue` и `net revenue` — не «деньги до расходов» и «деньги после расходов». Presentation зависит от того, является ли entity **principal**[^g-principal-agent] или **agent** относительно конкретного обещанного товара или service:
 
 - **Specified good/service** — конкретное обещание customer, которое оценивают: например, предоставить рекламную delivery или организовать доступ к supply.
 - **Principal** контролирует specified good/service до передачи customer; при такой conclusion согласованную оплату обычно показывают gross как revenue, а supplier component — отдельно по применимой cost policy.
@@ -196,7 +196,7 @@ advertiser → $100 → network → $80 → SSP → $68 → publisher
       agent conclusion     → обычно net fee/commission presentation
 ```
 
-`Primary responsibility`, `inventory risk` и `pricing discretion` могут служить evidence, но не образуют механический score. Conclusion делается для конкретной promise и transaction: одна AdTech-компания может быть principal в одном flow и agent в другом.
+`Primary responsibility`, `inventory risk` и `pricing discretion` могут служить evidence, но не образуют механический score. Conclusion делается для конкретной promise и transaction: одна AdTech-компания[^g-adtech] может быть principal в одном flow и agent в другом.
 
 ### Одинаковая transaction economics, две взаимоисключающие presentations
 
@@ -221,11 +221,11 @@ gross margin = (recognized revenue − cost of revenue) / recognized revenue
 - Magnite в Form 10-K за 2025 год описывала net presentation большинства platform transactions и gross presentation некоторых insertion-order campaigns при разных principal-agent conclusions.
 - The Trade Desk в Form 10-K за 2025 год отделяла gross billings и связанные receivables/payables от net recognized revenue при agent conclusion по Supplier Components.
 
-Это примеры policies конкретных компаний и периода, не универсальная классификация SSP или DSP. ASC 606, IFRS 15, договор и профессиональное accounting judgment определяют реальный вывод; глава даёт mental model, а не accounting advice.
+Это примеры policies конкретных компаний и периода, не универсальная классификация SSP или DSP[^g-dsp]. ASC 606, IFRS 15, договор и профессиональное accounting judgment определяют реальный вывод; глава даёт mental model, а не accounting advice.
 
 ## Arbitrage: spread в обмен на принятый риск
 
-**Arbitrage** в широком AdTech-смысле возникает, когда intermediary покупает media/traffic дешевле и продаёт дороже либо покупает на одной pricing basis, а продаёт на другой. Его economics зависят от spread и риска между boundaries.
+**Arbitrage**[^g-arbitrage] в широком AdTech-смысле возникает, когда intermediary покупает media/traffic дешевле и продаёт дороже либо покупает на одной pricing basis, а продаёт на другой. Его economics зависят от spread и риска между boundaries.
 
 Простой вариант:
 
@@ -237,7 +237,7 @@ buy/sell spread = $20
 
 Если network обязалась заплатить downstream `$80`, но не продала весь согласованный scope или customer не принял delivery, spread может уменьшиться или стать loss. Она принимает inventory/volume, fulfillment и reconciliation risk в объёме, заданном contracts.
 
-**Basis mismatch** добавляет performance risk. Intermediary может покупать impressions по CPM, а продавать clicks или actions по CPC/CPA. Его revenue тогда зависит от realised CTR/CVR и validation. Если clicks или actions возникают хуже ожиданий, исходная media cost остаётся, а downstream billable amount не покрывает её.
+**Basis mismatch**[^g-basis-mismatch] добавляет performance risk. Intermediary может покупать impressions по CPM, а продавать clicks или actions по CPC/CPA. Его revenue тогда зависит от realised CTR[^g-ctr]/CVR[^g-cvr] и validation. Если clicks или actions возникают хуже ожиданий, исходная media cost остаётся, а downstream billable amount не покрывает её.
 
 Не любой intermediary fee является arbitrage, и arbitrage не автоматически означает злоупотребление. Прозрачные fee, revenue share или resale spread могут оплачивать aggregation, reach, service и принятый риск. Проблема opacity возникает, когда customer не понимает buy/sell basis, величину spread, функцию посредника или конфликт incentives. Исследование CMA 2020 года иллюстрирует этот механизм в UK open display, но его rates нельзя использовать как current benchmark 2026 года.
 
@@ -265,7 +265,7 @@ Publisher payout:               85% × $80       =  $68
 Check:                         $20 + $12 + $68   = $100
 ```
 
-На одном исходном рекламном долларе contract economics составляют 20 центов retained network, 12 центов retained SSP и 68 центов publisher payout. В полном примере intermediary retained amount равен `$20 + $12 = $32`. Это разложение конкретных contracts, не отраслевой benchmark и не accounting profit.
+На одном исходном рекламном долларе contract economics составляют 20 центов retained network, 12 центов retained SSP и 68 центов publisher payout. В полном примере intermediary retained amount[^g-retained-amount] равен `$20 + $12 = $32`. Это разложение конкретных contracts, не отраслевой benchmark и не accounting profit.
 
 ### Denominators
 

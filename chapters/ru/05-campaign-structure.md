@@ -13,7 +13,7 @@ prerequisites: [ch-01, ch-02, ch-03, ch-04]
 
 # Как устроена рекламная кампания
 
-Рекламная кампания — не один banner и не строка в отчёте. Это **control-plane-конфигурация**, которая переводит business intent advertiser в правила delivery: что система должна улучшать, какие рекламные возможности допустимы, где может появиться реклама, сколько и когда можно потратить, какой content показать, куда привести user и какие signals использовать для измерения.
+Рекламная кампания[^g-campaign] — не один banner и не строка в отчёте. Это **control-plane-конфигурация**, которая переводит business intent advertiser[^g-advertiser] в правила delivery: что система должна улучшать, какие рекламные возможности допустимы, где может появиться реклама, сколько и когда можно потратить, какой content показать, куда привести user и какие signals использовать для измерения.
 
 У большинства platforms есть похожее дерево объектов:
 
@@ -26,11 +26,11 @@ advertiser account
             └── destination
 ```
 
-Но это не единая отраслевая schema. Vendors и campaign types по-разному размещают budget, targeting, optimization и schedule. Переносимая mental model строится не вокруг названий экранов, а вокруг двух вопросов: **какой объект владеет настройкой** и **какие дочерние объекты получают её действие**.
+Но это не единая отраслевая schema. Vendors и campaign types по-разному размещают budget[^g-budget], targeting[^g-targeting], optimization и schedule[^g-schedule]. Переносимая mental model строится не вокруг названий экранов, а вокруг двух вопросов: **какой объект владеет настройкой** и **какие дочерние объекты получают её действие**.
 
 ## Зачем кампании нужна иерархия: account как корень управления
 
-Один advertiser одновременно запускает разные продукты, страны, billing scopes и команды. Плоский список ads не позволил бы безопасно определить, кто имеет доступ, в какой валюте учитывать spend, какой time zone управляет расписанием и какие data sources доступны объектам. Поэтому platform начинает с **advertiser account**, или **ad account**, — tenant, внутри которого существуют campaigns и связанные с ними настройки.
+Один advertiser одновременно запускает разные продукты, страны, billing scopes и команды. Плоский список ads[^g-ad] не позволил бы безопасно определить, кто имеет доступ, в какой валюте учитывать spend[^g-media-spend], какой time zone управляет расписанием и какие data sources доступны объектам. Поэтому platform начинает с **advertiser account**[^g-ad-account], или **ad account**, — tenant, внутри которого существуют campaigns и связанные с ними настройки.
 
 Account обычно образует несколько границ сразу:
 
@@ -38,11 +38,11 @@ Account обычно образует несколько границ сразу
 - **Billing identity.** С ним связаны payer, billing profile или иная договорная сущность. Точный состав полей зависит от product.
 - **Currency и time zone.** Эти значения влияют на reporting, budget periods и schedule; в некоторых products после создания их трудно или невозможно изменить.
 - **Namespace.** Campaign и ad resource IDs уникальны как минимум в контексте platform/account. Scope и semantics event identifiers зависят от event source и deduplication contract и не обязаны следовать этому правилу.
-- **Shared configuration.** Data sources, conversion actions, brand assets, URL settings и defaults могут быть доступны нескольким campaigns.
+- **Shared configuration.** Data sources, conversion actions[^g-conversion], brand assets, URL settings и defaults могут быть доступны нескольким campaigns.
 
 Юридическая компания advertiser и ad account — не одно и то же. У одной компании могут быть отдельные accounts для регионов, brands, currencies или billing entities. И наоборот, один account может обслуживать несколько инициатив одной legal entity.
 
-**Manager account** — административный слой, который даёт agency или внутренней группе централизованный доступ к нескольким ad accounts. Доступ к отдельному account может быть выдан и без такого слоя. В любом случае это administrative access, а не дополнительный delivery-уровень внутри campaign.
+**Manager account**[^g-manager-account] — административный слой, который даёт agency[^g-agency] или внутренней группе централизованный доступ к нескольким ad accounts. Доступ к отдельному account может быть выдан и без такого слоя. В любом случае это administrative access, а не дополнительный delivery-уровень внутри campaign.
 
 ```text
 Subscription App Ltd.
@@ -68,16 +68,16 @@ Account-level setting часто наследуется вниз, пока бо�
 
 ## Execution tree: campaign, ad group/ad set, ad и creative
 
-**Campaign** — верхнеуровневый delivery container для одного business intent или согласованного flight. Она объединяет настройки, которые должны действовать на несколько дочерних групп и ads: objective, общие limits, channel/type и другие product-specific controls. Campaign — не просто папка для отчёта: её pause, schedule или ограничение может остановить либо изменить delivery всех descendants.
+**Campaign** — верхнеуровневый delivery container для одного business intent или согласованного flight. Она объединяет настройки, которые должны действовать на несколько дочерних групп и ads: objective[^g-campaign-objective], общие limits, channel/type и другие product-specific controls. Campaign — не просто папка для отчёта: её pause, schedule или ограничение может остановить либо изменить delivery всех descendants.
 
-**Ad group** или **ad set** — промежуточная scope boundary для группы ads. Обе сущности отвечают на вопрос «какие ads разделяют execution rules?», но не имеют универсально одинаковой schema:
+**Ad group**[^g-ad-set] или **ad set** — промежуточная scope boundary для группы ads. Обе сущности отвечают на вопрос «какие ads разделяют execution rules?», но не имеют универсально одинаковой schema:
 
 - в Google-like модели ad group обычно объединяет близкие ads и triggering criteria, например related keywords;
-- в Meta-like модели ad set обычно хранит audience, placements, optimization, bid, budget и schedule.
+- в Meta-like модели ad set обычно хранит audience, placements[^g-placement], optimization, bid, budget и schedule.
 
 Поэтому фразы «targeting всегда находится в ad group» или «budget всегда задаётся на campaign» неверны без названия platform и campaign type.
 
-**Ad** — исполняемая delivery-единица. Она связывает parent group, advertiser identity, creative, destination, tracking и status. **Creative** отвечает за сообщение и assets — text, image, video, audio, CTA и metadata. Creative может быть inline-частью ad или отдельным reusable object. Даже если UI показывает их одной карточкой, логически это разные обязанности:
+**Ad** — исполняемая delivery-единица. Она связывает parent group, advertiser identity, creative[^g-creative], destination[^g-destination], tracking и status. **Creative** отвечает за сообщение и assets — text, image, video, audio, CTA и metadata. Creative может быть inline-частью ad или отдельным reusable object. Даже если UI показывает их одной карточкой, логически это разные обязанности:
 
 ```text
 creative: что увидит user
@@ -156,9 +156,9 @@ business objective
 
 **Campaign objective** — high-level business intent или setup guidance: awareness, traffic, leads, app promotion, sales. Platform может на его основе предложить campaign types, features и defaults. Objective не обязан быть событием, которое optimizer непосредственно предсказывает.
 
-**Optimization event**, или **performance goal**, — наблюдаемый result, вероятность или value которого delivery system старается увеличить. Это может быть impression, click, landing-page view, install, purchase или conversion value. Конкретная **conversion action** задаёт, какое tracking event считается выбранным input для bidding и/или reporting; некоторые products группируют несколько actions в conversion goal и различают primary и secondary events.
+**Optimization event**[^g-optimization-target], или **performance goal**, — наблюдаемый result, вероятность или value которого delivery system старается увеличить. Это может быть impression[^g-impression], click[^g-click], landing-page view, install, purchase или conversion value. Конкретная **conversion action** задаёт, какое tracking event считается выбранным input для bidding и/или reporting; некоторые products группируют несколько actions в conversion goal и различают primary и secondary events.
 
-Глубокое событие вроде paid subscription ближе к business value, но не автоматически лучше для optimization. Оно может быть редким, задержанным или ненадёжно передаваться из event source. Install возникает раньше и чаще, но является лишь proxy для подписки. Выбор требует достаточного signal volume и корректного measurement; алгоритмический trade-off рассматривается в главе 7.
+Глубокое событие вроде paid subscription ближе к business value, но не автоматически лучше для optimization. Оно может быть редким, задержанным или ненадёжно передаваться из event source. Install возникает раньше и чаще, но является лишь proxy для подписки. Выбор требует достаточного signal volume и корректного measurement[^g-measurement]; алгоритмический trade-off рассматривается в главе 7.
 
 | Слой configuration | Вопрос | Subscription-app пример |
 |---|---|---|
@@ -166,14 +166,14 @@ business objective
 | Campaign objective | Какой общий intent сообщён platform? | `App promotion` или `Sales`, в зависимости от product |
 | Optimization event | Какой signal влияет на delivery decisions? | Сначала `install`, позже `paid_subscription` |
 | Tracked events | Какие события вообще наблюдаются? | Install, trial, purchase, renewal |
-| Bid strategy | Как policy переводит goal и constraints в bids? | Maximize conversions с заданным control |
+| Bid strategy[^g-bid-strategy] | Как policy переводит goal и constraints в bids? | Maximize conversions с заданным control |
 | Billing basis | За какое qualifying event возникает charge? | Например CPC; basis известна из contract и не обязана совпадать с optimization |
 
-Tracking может собирать четыре events, пока для optimization выбрано только одно. Billing basis, как показано в предыдущей главе, задаётся отдельно. Поэтому label `subscription campaign` ничего не доказывает о billable event.
+Billing basis[^g-billable-event], как показано в предыдущей главе, задаётся отдельно. Поэтому label `subscription campaign` ничего не доказывает о billable event.
 
 ### Targeting и placement
 
-**Targeting** определяет eligibility rules и inputs delivery model: какие opportunities, users или contexts допустимы либо предпочтительны. На обзорном уровне это могут быть geo, device, context, audience/keyword criteria и exclusions. Источники audience data, identity и privacy рассматриваются в главе 6.
+**Targeting** определяет eligibility rules и inputs delivery model: какие opportunities[^g-ad-opportunity], users или contexts допустимы либо предпочтительны. На обзорном уровне это могут быть geo, device, context, audience/keyword criteria и exclusions. Источники audience data, identity и privacy рассматриваются в главе 6.
 
 **Placement** отвечает на другой вопрос: в каком media environment и slot реклама может появиться. Примеры — feed, stories, search results, video pre-roll, in-app banner или rewarded slot. Placement связан с eligibility creative format, но сами formats, assets и compatibility подробно рассматриваются в главе 8.
 
@@ -195,7 +195,7 @@ actual bid    = решение для конкретной auction opportunity
 price/charge  = результат auction и billing contract
 ```
 
-Один числовой `target CPA` не является actual bid, а actual bid не определяет billable amount сам по себе. Как вычисляются bids, распределяется budget и работает pacing, разбирается в главе 7.
+Один числовой `target CPA` не является actual bid, а actual bid не определяет billable amount сам по себе. Как вычисляются bids, распределяется budget и работает pacing[^g-pacing], разбирается в главе 7.
 
 Итак, objective не равен optimization event; placement не равен audience; strategy не равна bid amount. Эти различия позволяют прочитать campaign configuration без ложного предположения, что один UI label одновременно описывает business goal, delivery signal и деньги.
 
@@ -239,13 +239,13 @@ Campaign связывает два разных маршрута: user долж�
 
 **Landing page**, **destination** или **final URL** — первая целевая поверхность после interaction: web page, App Store/Google Play listing либо deep link в app. Это часть user experience и product path, а не tracking record.
 
-**Tracking settings** — configuration observability. В неё могут входить:
+**Tracking settings**[^g-tracking-settings] — configuration observability. В неё могут входить:
 
 - campaign, group и ad IDs;
 - URL parameters, macros, tracking template и final URL suffix;
-- pixel, app SDK, server-to-server integration или MMP как event source;
+- pixel, app SDK, server-to-server integration или MMP[^g-mmp] как event source;
 - выбранные conversion actions;
-- attribution configuration boundary, например используемое platform rule/window.
+- attribution[^g-attribution] configuration boundary, например используемое platform rule/window.
 
 Attribution mechanics, mobile privacy, postbacks и discrepancy analysis здесь не рассматриваются; важно увидеть, где campaign с ними соединяется.
 
@@ -291,7 +291,7 @@ draft → learning → active → paused → completed
 Но это мнемоника, а не универсальная линейная state machine. Она смешивает состояние configuration, разрешение delivery, schedule и состояние optimizer. Реальный объект лучше описывать **вектором состояний**.
 
 - **Draft**: configuration ещё не опубликована. В некоторых systems draft существует только в UI или client и ещё не является server-side campaign.
-- **Learning**: delivery/bidding model собирает evidence после запуска или material change. Показы и spend в это время уже могут происходить.
+- **Learning**[^g-learning-phase]: delivery/bidding model собирает evidence после запуска или material change. Показы и spend в это время уже могут происходить.
 - **Active/enabled**: оператор разрешил delivery. Фактические показы дополнительно зависят от parent, review, schedule, budget, errors и наличия eligible opportunities.
 - **Paused**: оператор остановил delivery. Обычно это обратимый переход; resume не создаёт новую campaign.
 - **Completed/ended**: наступила end condition, чаще всего schedule end. Object, reporting и history обычно сохраняются; это не synonym deleted.
@@ -335,7 +335,7 @@ review:     approved или pending для нового creative
 optimizer:  learning on paid_subscription event
 ```
 
-Meta, например, относит изменения targeting, creative, optimization event, состава ads и bid strategy к возможным significant edits; влияние budget change зависит от product rules и масштаба. Этот список нельзя переносить на Google Ads, DSP или ad network, а thresholds и duration нельзя считать постоянными. Общая причинная связь лишь такова:
+Meta, например, относит изменения targeting, creative, optimization event, состава ads и bid strategy к возможным significant edits; влияние budget change зависит от product rules и масштаба. Этот список нельзя переносить на Google Ads, DSP[^g-dsp] или ad network[^g-ad-network], а thresholds и duration нельзя считать постоянными. Общая причинная связь лишь такова:
 
 ```text
 material configuration change
