@@ -10,7 +10,7 @@ The course assumes **zero AdTech knowledge** and **high software-engineering flu
 - `planner-researcher.md` — English prompt for research and instructional planning.
 - `author.md` — English prompt for writing one finished chapter.
 - `auditor.md` — English prompt for independent coverage, accuracy, scope, and density review.
-- `final-editor.md` — English prompt for applying the audit with minimal, controlled edits.
+- `translator.md` — English prompt for producing a strict English translation of one finished chapter or the shared glossary.
 - `README-adtech.md` — this index. The pre-existing generic `README.md` is intentionally left untouched.
 
 Role prompts are English for easier agent configuration. Their generated artifacts are Russian by contract: plans, research notes, chapters, audits, and editorial outputs. English translation is a separate later pipeline.
