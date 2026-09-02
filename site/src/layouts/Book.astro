@@ -32,6 +32,7 @@ const ruUrl = locale === 'ru' ? selfUrl : alternate ? new URL(alternate, SITE) :
 const enUrl = locale === 'en' ? selfUrl : alternate ? new URL(alternate, SITE) : null;
 
 const glossaryHref = `${BASE}${locale === 'en' ? 'en/' : ''}glossary/`;
+const dlArtifact = `adtech-${locale}`;
 ---
 
 <!doctype html>
@@ -101,8 +102,8 @@ const glossaryHref = `${BASE}${locale === 'en' ? 'en/' : ''}glossary/`;
         </button>
       </div>
       <div class="spine__dl">
-        <a href={downloadHref('adtech-ru.epub')} download>EPUB</a>
-        <a href={downloadHref('adtech-ru.pdf')} download>PDF</a>
+        <a href={downloadHref(`${dlArtifact}.epub`)} download>EPUB</a>
+        <a href={downloadHref(`${dlArtifact}.pdf`)} download>PDF</a>
       </div>
     </aside>
 

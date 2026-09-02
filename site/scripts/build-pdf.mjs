@@ -1,12 +1,22 @@
-// Builds adtech-ru.pdf from chapters/ru/*.md via pandoc → HTML → headless Chrome (raw CDP).
-// Run from site/: node scripts/build-pdf.mjs
+// Builds adtech-<locale>.pdf from chapters/<locale>/*.md via pandoc → HTML → headless Chrome (raw CDP).
+// Run from site/: node scripts/build-pdf.mjs <ru|en>
 import { execFileSync, spawn } from 'node:child_process';
 import { mkdirSync, readdirSync, writeFileSync, rmSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 
 const siteDir = process.cwd();
 const rootDir = resolve(siteDir, '..');
-const chaptersDir = join(rootDir, 'chapters', 'ru');
+const locale = process.argv[2];
+const BOOKS = {
+  ru: { glossary: 'glossary.md', title: 'AdTech Education Materials' },
+  en: { glossary: 'glossary.en.md', title: 'AdTech: How Advertising Technology Works' },
+};
+const book = BOOKS[locale];
+if (!book) {
+  console.error('Usage: node scripts/build-pdf.mjs <ru|en>');
+  process.exit(1);
+}
+const chaptersDir = join(rootDir, 'chapters', locale);
 const buildDir = join(siteDir, 'build');
 const outDir = join(siteDir, 'public', 'downloads');
 
@@ -30,8 +40,7 @@ const chapters = readdirSync(chaptersDir)
   .filter((f) => f.endsWith('.md'))
   .sort()
   .map((f) => join(chaptersDir, f));
-// Глоссарий — единый источник определений; идёт последним файлом книги.
-const glossary = join(rootDir, 'glossary.md');
+const glossary = join(rootDir, book.glossary);
 if (!chapters.includes(glossary)) chapters.push(glossary);
 
 if (chapters.length === 0) {
@@ -52,13 +61,13 @@ execFileSync(
     '--standalone',
     '--toc',
     '--toc-depth=2',
-    '--metadata', 'lang=ru',
-    '--metadata', 'title=AdTech Education Materials',
+    '--metadata', `lang=${locale}`,
+    '--metadata', `title=${book.title}`,
     '--css=scripts/print.css',
     '--lua-filter', join(rootDir, 'filters', 'glossary.lua'),
     '-o', bookHtml,
   ],
-  { cwd: siteDir, stdio: 'inherit', env: { ...process.env, GLOSSARY: join(rootDir, 'glossary.md') } },
+  { cwd: siteDir, stdio: 'inherit', env: { ...process.env, GLOSSARY: glossary } },
 );
 
 // --- Launch Chrome with an ephemeral CDP port and talk raw DevTools protocol ---
@@ -144,7 +153,7 @@ const pdf = await send('Page.printToPDF', {
     '<span class="pageNumber"></span> / <span class="totalPages"></span></div>',
 });
 
-const pdfPath = join(outDir, 'adtech-ru.pdf');
+const pdfPath = join(outDir, `adtech-${locale}.pdf`);
 writeFileSync(pdfPath, Buffer.from(pdf.data, 'base64'));
 console.log('PDF written:', pdfPath);
 ws.close();
