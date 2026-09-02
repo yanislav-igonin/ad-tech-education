@@ -1,0 +1,265 @@
+---
+import { glossaryTerms } from '../lib/glossary';
+
+// Мини-список терминов для палетки: инлайнится в HTML на билде, чтобы
+// Cmd/Ctrl+K сразу показывал определение без запросов к индексу.
+const stripMd = (s: string) =>
+  s
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/[*_`#>]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+const terms = glossaryTerms().map((t) => ({
+  id: t.id,
+  title: t.title,
+  def: stripMd(t.definitionMd),
+}));
+const json = JSON.stringify(terms).replace(/</g, '\\u003c');
+---
+
+<div class="cmdk" id="cmdk" hidden>
+  <div class="cmdk__backdrop" data-cmdk-close></div>
+  <div class="cmdk__panel" role="dialog" aria-modal="true" aria-label="Поиск по учебнику">
+    <input
+      class="cmdk__input"
+      type="search"
+      placeholder="Поиск по главам и глоссарию…"
+      aria-label="Поиск по учебнику"
+    />
+    <div class="cmdk__results" role="listbox" aria-label="Результаты поиска"></div>
+    <p class="cmdk__hint"><kbd>↑</kbd><kbd>↓</kbd> навигация · <kbd>Enter</kbd> открыть · <kbd>Esc</kbd> закрыть</p>
+  </div>
+</div>
+<script type="application/json" id="cmdk-glossary" set:html={json} />
+
+<script>
+  // Командная палетка: Cmd/Ctrl+K → глоссарий + полнотекстовый поиск Pagefind.
+  // ClientRouter заменяет <body> при клиентской навигации, поэтому узлы
+  // запрашиваем заново на каждое открытие, а слушатели вешаем на document/window.
+  import { navigate } from 'astro:transitions/client';
+  type Term = { id: string; title: string; def: string };
+  type Row = { title: string; excerpt: string; href: string; meta: string | null; term: boolean };
+
+  const BASE = import.meta.env.BASE_URL.endsWith('/')
+    ? import.meta.env.BASE_URL
+    : `${import.meta.env.BASE_URL}/`;
+
+  const terms: Term[] = JSON.parse(
+    document.getElementById('cmdk-glossary')?.textContent ?? '[]',
+  );
+
+  // Pagefind лениво грузит WASM и чанки индекса при первом поиске.
+  let pf: Promise<any> | null = null;
+  const pagefind = () => {
+    // Vite оборачивает динамический import в __vitePreload, который
+    // не работает для рантайм-URL вне бандла — обходим его.
+    pf ??= new Function('return import("/pagefind/pagefind.js")')().catch((e) => {
+      console.error('Pagefind недоступен:', e);
+      return null;
+    });
+    return pf;
+  };
+
+  let isOpen = false;
+  let seq = 0;
+  let rows: Row[] = [];
+  let sel = 0;
+
+  const esc = (s: string) =>
+    s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  function nodes() {
+    return {
+      root: document.getElementById('cmdk'),
+      input: document.querySelector<HTMLInputElement>('#cmdk .cmdk__input'),
+      list: document.querySelector<HTMLDivElement>('#cmdk .cmdk__results'),
+    };
+  }
+
+  function open() {
+    const { root, input } = nodes();
+    if (!root) return;
+    isOpen = true;
+    root.hidden = false;
+    input?.focus();
+    input?.select();
+    rows = [];
+    sel = 0;
+    // Прогрев: грузим WASM и инициализируем индекс, пока пользователь печатает.
+    pagefind().then((m: any) => m?.search('').catch(() => {}));
+  }
+
+  function close() {
+    const { root, input } = nodes();
+    isOpen = false;
+    if (root) root.hidden = true;
+    if (input) input.value = '';
+    input?.blur();
+  }
+
+  function render() {
+    const { list } = nodes();
+    if (!list) return;
+    if (rows.length === 0) {
+      list.innerHTML = `<p class="cmdk__empty">Ничего не нашлось</p>`;
+      return;
+    }
+    list.innerHTML = rows
+      .map(
+        (r, i) => `
+        <a class="cmdk__row${r.term ? ' cmdk__row--term' : ''}${i === sel ? ' is-selected' : ''}"
+           role="option" aria-selected="${i === sel}" href="${esc(r.href)}">
+          <span class="cmdk__row-title"><span>${esc(r.title)}</span>${
+            r.meta ? `<span class="cmdk__row-meta">${esc(r.meta)}</span>` : ''
+          }</span>
+          <p class="cmdk__row-excerpt">${r.excerpt}</p>
+        </a>`,
+      )
+      .join('');
+    list.querySelector('.is-selected')?.scrollIntoView({ block: 'nearest' });
+  }
+
+  function move(delta: number) {
+    if (rows.length === 0) return;
+    sel = (sel + delta + rows.length) % rows.length;
+    render();
+  }
+
+  function submit() {
+    const { list } = nodes();
+    const target = list?.querySelectorAll<HTMLAnchorElement>('.cmdk__row')[sel];
+    if (!target) return;
+    close();
+    const href = target.getAttribute('href') ?? '/';
+    // Страховка регистрируется ДО navigate: если SPA-переход не случится
+    // или navigate бросит (гонка ViewTransition), делаем полную навигацию.
+    window.setTimeout(() => {
+      if (window.location.pathname + window.location.hash !== href) window.location.assign(href);
+    }, 400);
+    try {
+      navigate(href); // SPA-переход через ClientRouter
+    } catch {
+      window.location.assign(href);
+    }
+  }
+
+  async function search(q: string) {
+    const id = ++seq;
+    const found: Row[] = [];
+    const nq = q.trim().toLowerCase();
+
+    // Глоссарий ищем сразу и локально: совпадение по заголовку термина
+    // ценится выше, чем по тексту определения.
+    if (nq) {
+      const scored = terms
+        .map((t) => {
+          const title = t.title.toLowerCase();
+          const s =
+            title.startsWith(nq) ? 2 : title.includes(nq) || t.def.toLowerCase().includes(nq) ? 1 : 0;
+          return { t, s };
+        })
+        .filter((x) => x.s > 0)
+        .sort((a, b) => b.s - a.s)
+        .slice(0, 3);
+      for (const { t } of scored) {
+        found.push({
+          title: t.title,
+          excerpt: esc(t.def),
+          href: `${BASE}glossary/#g-${t.id}`,
+          meta: 'Глоссарий',
+          term: true,
+        });
+      }
+    }
+
+    if (id !== seq) return; // устаревший ответ — молча выбрасываем
+    rows = found.slice(0, 12);
+    sel = 0;
+    render();
+
+    // Полнотекстовый поиск по главам: не ищем по одной букве (страница
+    // совпадений огромная) и только после затихания ввода. У каждого
+    // совпавшего документа берём выдержку и до двух секций с якорями.
+    if (nq.length < 2) return;
+    const m = await pagefind();
+    if (m) {
+      try {
+        const res = await m.search(q);
+        const data = await Promise.all(
+          res.results.slice(0, 6).map((r: any) => r.data()),
+        );
+        for (const d of data) {
+          found.push({
+            title: d.meta?.title ?? d.url,
+            excerpt: d.excerpt ?? '',
+            href: d.url,
+            meta: null,
+            term: false,
+          });
+          for (const sub of (d.sub_results ?? []).slice(0, 2)) {
+            found.push({
+              title: sub.title,
+              excerpt: sub.excerpt ?? '',
+              href: sub.url,
+              meta: d.meta?.title ?? null,
+              term: false,
+            });
+          }
+        }
+      } catch (e) {
+        console.error('Поиск Pagefind упал:', e);
+      }
+    }
+
+    if (id !== seq) return;
+    rows = found.slice(0, 12);
+    sel = 0;
+    render();
+  }
+
+  let debounce = 0;
+  function onInput(q: string) {
+    clearTimeout(debounce);
+    debounce = window.setTimeout(() => search(q), 200);
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      isOpen ? close() : open();
+      return;
+    }
+    if (!isOpen) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      move(1);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      move(-1);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      submit();
+    }
+  });
+
+  document.addEventListener('input', (e) => {
+    const t = e.target as HTMLElement;
+    if (t.matches?.('#cmdk .cmdk__input')) onInput((t as HTMLInputElement).value);
+  });
+
+  document.addEventListener('click', (e) => {
+    const t = e.target as HTMLElement;
+    if (t.closest?.('[data-cmdk-open]')) {
+      e.preventDefault();
+      open();
+    } else if (t.closest?.('[data-cmdk-close]')) close();
+  });
+
+  // После SPA-перехода <body> новый: палетка из разметки страницы снова
+  // скрыта. Сбрасываем флаг, чтобы шорткат не «закрывал» невидимый слой.
+  document.addEventListener('astro:page-load', () => {
+    isOpen = false;
+  });
+</script>

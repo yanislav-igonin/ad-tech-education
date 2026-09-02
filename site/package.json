@@ -9,8 +9,9 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "astro": "^7.2.9",
     "@astrojs/markdown-satteri": "^0.3.8",
+    "astro": "^7.2.9",
+    "astro-pagefind": "^2.0.1",
     "satteri": "^0.10.5"
   }
 }
