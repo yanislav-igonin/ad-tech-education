@@ -77,11 +77,11 @@ language: ru
 
 **Пример:** игра прогнозирует 10 млн полноэкранных показов на следующий месяц — это inventory; конкретная возможность возникает только когда игрок завершает уровень.
 
-### Placement (ad slot) {#g-placement}
+### Placement {#g-placement}
 
-**Placement (ad slot, рекламное место)** — заранее заданное место или правило появления рекламы в среде publisher: баннер, полноэкранный блок после уровня, pre-roll. Placement существует в дизайне продукта до возникновения конкретной возможности и порождает поток ad opportunity по мере использования продукта.
+**Placement (рекламное место или selectable media scope)** — overloaded product term. На publisher side это заранее заданный ad slot или правило появления рекламы, которое порождает ad opportunities по мере использования продукта. На buy side placement может означать явно выбранную среду показа — site, app, channel, video, section или отдельный slot. Уровень сущности нужно уточнять из product contract.
 
-**Пример:** «полноэкранный блок после завершения уровня в игре» — placement; момент, когда конкретный игрок дошёл до этого места, — уже ad opportunity.
+**Пример:** «полноэкранный блок после уровня» — publisher-side placement; настройка campaign «показывать только в outdoor-news app» — buy-side selectable placement.
 
 ### Ad opportunity {#g-ad-opportunity}
 
@@ -556,3 +556,58 @@ language: ru
 **Learning phase (learning status, фаза обучения)** — состояние optimizer, в котором delivery/bidding model собирает evidence после запуска или material configuration change: прежние данные хуже описывают новые решения. Learning — одна из осей operational state наряду с configured, effective и review status, а не противоположность active: показы и spend идут, а vendor-specific significant edits (targeting, creative, optimization event, состав ads, bid strategy) могут вернуть optimizer в learning без изменения configured status.
 
 **Пример:** ad set со stable delivery по installs переводят на optimization event `paid_subscription` — configured status остаётся `active`, но optimizer снова в learning, пока не соберёт достаточно данных по новому событию.
+
+
+### Audience segment {#g-audience-segment}
+
+**Audience segment** — addressable set entities, membership которого задают named rule, data source/provenance, observation window и platform matching/activation contract; entity может быть user, account, device, browser, household или modeled profile, поэтому segment не обязательно является списком известных людей.
+
+**Пример:** segment `trial_started AND no paid_subscription within 7d` содержит только те platform-addressable entities, которых удалось сопоставить с подходящими product events.
+
+### First-party audience {#g-first-party-audience}
+
+**First-party audience** — audience segment, построенный из data, собранных advertiser или publisher в direct relationship: CRM/customer records, site/app events, subscriptions и purchases. `First-party` описывает provenance, но не гарантирует consent, legal basis, ownership, accuracy или полноту platform match.
+
+**Пример:** subscription app передаёт platform собственный segment пользователей, начавших trial, но ещё не оформивших платную подписку.
+
+### Third-party audience {#g-third-party-audience}
+
+**Third-party audience** — audience segment, поставляемый внешним data provider независимо от direct relationship advertiser с entity; для оценки segment нужны provenance, collection method, recency, membership criteria, modeling metadata, permissions и activation coverage, поскольку label сам по себе не доказывает состав или точность.
+
+**Пример:** provider продаёт segment `likely subscription buyers`; advertiser проверяет происхождение, окно наблюдения и долю modeled membership до activation в DSP.
+
+### Contextual targeting {#g-contextual-targeting}
+
+**Contextual targeting** — выбор ad opportunities по текущему content или media context: topic, semantics, page/app/video category и связанным signals. Он описывает среду показа и не требует утверждения, что известна устойчивая cross-site identity user.
+
+**Пример:** реклама hiking boots допускается в статьях о зимних походах независимо от того, известна ли platform история конкретного читателя.
+
+### Retargeting {#g-retargeting}
+
+**Retargeting** — targeting entities, ранее выполнивших named interaction или event в заданном observation window, чтобы обратиться к ним повторно; это delivery tactic, а не attribution rule и не доказательство causal effect.
+
+**Пример:** user начал trial, но не купил subscription за семь дней, поэтому входит в segment для повторного показа premium-offer.
+
+### Lookalike audience {#g-lookalike-audience}
+
+**Lookalike audience** — modeled audience новых prospects, найденных по similarity или predicted relevance к seed audience; результат зависит от seed quality и platform model, а использование lookalike в delivery может быть hard constraint или suggestion согласно product contract.
+
+**Пример:** high-value subscribers образуют seed, по которому platform ищет новых prospects, не обязанных входить в исходный segment.
+
+### Audience exclusion / suppression {#g-audience-exclusion}
+
+**Audience exclusion / suppression** — отрицательное targeting rule, предназначенное не допустить entities с named membership или status; фактическая полнота exclusion ограничена identity match, freshness, propagation latency и semantics конкретной platform.
+
+**Пример:** acquisition campaign исключает current paid subscribers, но поздно пришедшее subscription event может временно оставить нового customer вне suppression segment.
+
+### Audience overlap {#g-audience-overlap}
+
+**Audience overlap** — пересечение memberships нескольких audience segments в одной activation universe и на одном snapshot; оно влияет на distinct reach, reporting и segmentation design, но само по себе не доказывает duplicate billing или self-competition.
+
+**Пример:** часть entities одновременно входит в `trial_no_purchase` и `existing_paid`, что указывает проверить event freshness и membership rules.
+
+### Algorithmic targeting {#g-algorithmic-targeting}
+
+**Algorithmic targeting** — delivery mode, в котором model использует optimization goal, context, audience seeds и другие signals для поиска и ранжирования opportunities, потенциально за пределами suggested segments, но внутри заявленных hard controls и exclusions. Broad targeting — setup с минимумом positive audience restrictions, а не отсутствие constraints.
+
+**Пример:** system ищет likely subscribers вне lookalike seed, сохраняя hard controls `DE + mobile` и exclusion current paid subscribers.

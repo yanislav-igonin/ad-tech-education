@@ -77,11 +77,11 @@ Definitions of the course's key terms. In the chapters, these terms are marked w
 
 **Example:** a game forecasts 10 million full-screen impressions for the next month — that is inventory; a specific opportunity arises only when a player finishes a level.
 
-### Placement (ad slot) {#g-placement}
+### Placement {#g-placement}
 
-**Placement (ad slot)** — a predefined slot or rule for ad appearance in a publisher's environment: a banner, a full-screen block after a level, a pre-roll. A placement exists in the product design before a specific opportunity arises and generates a stream of ad opportunities as the product is used.
+**Placement (ad slot or selectable media scope)** — an overloaded product term. On the publisher side, it is a predefined ad slot or rule for ad appearance that generates ad opportunities as the product is used. On the buy side, placement can mean an explicitly selected delivery environment — a site, app, channel, video, section, or individual slot. The entity level must be clarified from the product contract.
 
-**Example:** "a full-screen block after completing a level in a game" is a placement; the moment a specific player reaches that point is already an ad opportunity.
+**Example:** "a full-screen block after a level" is a publisher-side placement; the campaign setting "show only in the outdoor-news app" is a buy-side selectable placement.
 
 ### Ad opportunity {#g-ad-opportunity}
 
@@ -556,3 +556,57 @@ Definitions of the course's key terms. In the chapters, these terms are marked w
 **Learning phase (learning status)** — the state of the optimizer in which the delivery/bidding model gathers evidence after launch or a material configuration change: earlier data describe the new decisions less accurately. Learning is one of the axes of the operational state alongside the configured, effective, and review statuses, not the opposite of active: impressions and spend continue, and vendor-specific significant edits (targeting, creative, optimization event, the set of ads, the bid strategy) can return the optimizer to learning without changing the configured status.
 
 **Example:** an ad set with stable delivery on installs is switched to the optimization event `paid_subscription` — the configured status remains `active`, but the optimizer is back in learning until it has gathered enough data on the new event.
+
+### Audience segment {#g-audience-segment}
+
+**Audience segment** — an addressable set of entities whose membership is defined by a named rule, data source/provenance, observation window, and platform matching/activation contract; an entity can be a user, account, device, browser, household, or modeled profile, so a segment is not necessarily a list of known people.
+
+**Example:** the segment `trial_started AND no paid_subscription within 7d` contains only those platform-addressable entities that could be matched to the relevant product events.
+
+### First-party audience {#g-first-party-audience}
+
+**First-party audience** — an audience segment built from data collected by an advertiser or publisher in a direct relationship: CRM/customer records, site/app events, subscriptions, and purchases. `First-party` describes provenance but does not guarantee consent, legal basis, ownership, accuracy, or completeness of the platform match.
+
+**Example:** a subscription app sends a platform its own segment of users who started a trial but have not yet purchased a paid subscription.
+
+### Third-party audience {#g-third-party-audience}
+
+**Third-party audience** — an audience segment supplied by an external data provider independently of an advertiser's direct relationship with the entity; evaluating the segment requires provenance, collection method, recency, membership criteria, modeling metadata, permissions, and activation coverage, because the label alone does not prove its composition or accuracy.
+
+**Example:** a provider sells the segment `likely subscription buyers`; the advertiser checks its origin, observation window, and share of modeled membership before activation in a DSP.
+
+### Contextual targeting {#g-contextual-targeting}
+
+**Contextual targeting** — selecting ad opportunities based on the current content or media context: topic, semantics, page/app/video category, and related signals. It describes the delivery environment and does not require asserting that a persistent cross-site identity is known for the user.
+
+**Example:** an ad for hiking boots is eligible in articles about winter hikes regardless of whether the platform knows the history of the specific reader.
+
+### Retargeting {#g-retargeting}
+
+**Retargeting** — targeting entities that previously performed a named interaction or event within a specified observation window in order to address them again; it is a delivery tactic, not an attribution rule or proof of causal effect.
+
+**Example:** a user started a trial but did not purchase a subscription within seven days, so they are included in a segment to be shown the premium-offer again.
+
+### Lookalike audience {#g-lookalike-audience}
+
+**Lookalike audience** — a modeled audience of new prospects found by similarity or predicted relevance to a seed audience; the result depends on seed quality and the platform model, and the use of a lookalike in delivery can be a hard constraint or a suggestion according to the product contract.
+
+**Example:** high-value subscribers form a seed from which the platform looks for new prospects who need not belong to the original segment.
+
+### Audience exclusion / suppression {#g-audience-exclusion}
+
+**Audience exclusion / suppression** — a negative targeting rule designed to exclude entities with a named membership or status; the actual completeness of the exclusion is limited by identity match, freshness, propagation latency, and the semantics of the specific platform.
+
+**Example:** an acquisition campaign excludes current paid subscribers, but a late-arriving subscription event can temporarily leave a new customer outside the suppression segment.
+
+### Audience overlap {#g-audience-overlap}
+
+**Audience overlap** — the intersection of memberships in multiple audience segments within a single activation universe and at the same snapshot; it affects distinct reach, reporting, and segmentation design, but does not by itself prove duplicate billing or self-competition.
+
+**Example:** some entities belong to both `trial_no_purchase` and `existing_paid`, indicating that event freshness and membership rules should be checked.
+
+### Algorithmic targeting {#g-algorithmic-targeting}
+
+**Algorithmic targeting** — a delivery mode in which a model uses an optimization goal, context, audience seeds, and other signals to find and rank opportunities, potentially beyond suggested segments but within the stated hard controls and exclusions. Broad targeting is a setup with minimal positive audience restrictions, not an absence of constraints.
+
+**Example:** the system looks for likely subscribers outside the lookalike seed while retaining the hard controls `DE + mobile` and the exclusion of current paid subscribers.
