@@ -34,7 +34,7 @@ This is not one mandatory technical pipeline. A deal can be direct, pass through
 
 The market has three basic participants.
 
-- **Advertiser**[^g-advertiser] funds advertising for the sake of a business result (`business outcome`): for example, an app install, a subscription purchase, or growing brand awareness. It buys not a person, but the opportunity to address an audience in a specific context.
+- **Advertiser**[^g-advertiser] funds advertising for the sake of a business result (`business outcome`): for example, an app install, a subscription purchase, or growing awareness. It buys not a person, but the opportunity to address an audience in a specific context.
 - **Publisher**[^g-publisher] owns or operates the environment where an advertising opportunity arises: a website, a mobile app, a video service, a game. Advertising makes it possible to monetize that environment.
 - **User** uses a website, an app, or another media product. Their attention makes advertising meaningful, but the user is not `inventory`[^g-inventory], usually does not sell advertising, and does not pay for media.
 
@@ -56,7 +56,7 @@ The value exchange is not symmetric. The advertiser pays for media access; the p
 
 These words denote sides of the market, not specific technologies. A DSP (Demand-Side Platform)[^g-dsp] belongs to the demand side not because it "creates demand," but because it acts in the buyer's interest. An SSP (Supply-Side Platform)[^g-ssp] belongs to the supply side because it helps publishers manage the sale of opportunities.
 
-The subject of the deal is **advertising inventory**: the set of available or forecastable opportunities to show an ad. Inventory is bounded by the environment, the placement, the format, the timing, the publisher's rules, and the acceptable audience context. It is not a list of users, and it does not mean that future impressions already exist in a warehouse.
+The subject of the deal is **advertising inventory**: the set of available or projected opportunities to show an ad. Inventory is bounded by the environment, the placement, the format, the timing, the publisher's rules, and the acceptable audience context. It is not a list of users, and it does not mean that future impressions already exist in a warehouse.
 
 It is useful to distinguish three levels:
 
@@ -84,7 +84,7 @@ AdTech appears where the market requires repeatable technical execution:
 |---|---|---|
 | Many advertisers and publishers | `Aggregation`: pool demand or supply | DSP, ad network[^g-ad-network], SSP |
 | Each opportunity needs a suitable buyer and creative | `Matching` and decisioning | DSP, ad network, ad server[^g-ad-server], publisher stack |
-| Little time is left to make a decision | Automated execution | Buying/selling platforms, exchange[^g-ad-exchange] |
+| There is often little time left to make a decision | Automated execution | Buying/selling platforms, exchange[^g-ad-exchange] |
 | The creative must reach the right environment and format | `Ad serving` and interoperability | Ad server, SDK, platform integrations |
 | Parties see events from different vantage points | Measurement and reporting | Ad server, measurement providers; in mobile — MMP (Mobile Measurement Partner)[^g-mmp] |
 | A delivery may be unsuitable or low-quality | Verification[^g-verification] and risk controls | Verification provider, fraud/quality systems |
@@ -96,7 +96,7 @@ Standards and shared protocols reduce the number of pairwise integrations: it be
 
 ### Why Intermediaries Exist
 
-**Intermediary**[^g-intermediary] — a participant that connects the sides of the market or performs a specialized function. Intermediaries arise not from a need to add more companies to the chain, but from the division of labor:
+**Intermediary**[^g-intermediary] is a participant that connects the sides of the market or performs a specialized function. Intermediaries arise not from a need to add more companies to the chain, but from the division of labor:
 
 - an agency[^g-agency] manages media buying on behalf of the advertiser;
 - a demand-side provider aggregates access to supply and performs selection for the advertiser;
@@ -182,7 +182,7 @@ publisher context → selection systems → selected ad + delivery metadata
 impression / click / outcome events → measurement + reporting → optimization
 ```
 
-**Campaign**[^g-campaign] — an organized set of advertising activity with a goal, a budget, and creatives. Before delivery, the advertiser side tells the systems the conditions of that activity. When an opportunity arises, the publisher side may pass a description of the app or site, the placement, the format, the time, and — as permitted by platform rules — signals about context, device, or audience. The selection systems match supply with demand and return a result.
+**Campaign**[^g-campaign] is an organized set of advertising activity with a goal, a budget, and creatives. Before delivery, the advertiser side tells the systems the conditions of that activity. When an opportunity arises, the publisher side may pass a description of the app or site, the placement, the format, the time, and — as permitted by platform rules — signals about context, device, or audience. The selection systems match supply with demand and return a result.
 
 The systems link objects and events with identifiers such as `request_id`, `campaign_id`, and `creative_id`; the specific fields and rules depend on the integration. After delivery, different participants may separately register an `impression` and a `click`. If the user installs the advertised app and takes out a subscription, the outcome event may reach measurement systems — provided the right integrations exist and within platform/privacy restrictions.
 
@@ -199,7 +199,7 @@ Separately, depending on contracts:
 advertiser or publisher → service / SaaS fee → technology provider
 ```
 
-**Media spend**[^g-media-spend] — the money an advertiser allocates to buying advertising. A portion passes to media sellers and ultimately forms **publisher revenue**[^g-publisher-revenue]; along the way, **fees** may be deducted. But not every provider takes a share of every advertising payment. An agency, an ad server, an MMP, a verification or data provider may receive a separate service fee, SaaS fee, or other contractual payment. Some participants only pass along or measure events and never touch media money at all.
+**Media spend**[^g-media-spend] is the money an advertiser allocates to buying advertising. A portion passes to media sellers and ultimately forms **publisher revenue**[^g-publisher-revenue]; along the way, **fees** may be deducted. But not every provider takes a share of every advertising payment. An agency, an ad server, an MMP, a verification or data provider may receive a separate service fee, SaaS fee, or other contractual payment. Some participants only pass along or measure events and never touch media money at all.
 
 Therefore, the three sums must not be treated as synonyms:
 
@@ -240,7 +240,7 @@ The feedback loop is the reason AdTech is not just delivery infrastructure. Valu
 
 ## AdTech and MarTech: A Working Boundary
 
-**MarTech**[^g-martech] — technology for the broader management of marketing and the customer lifecycle: customer data, communications, and the advertiser's owned channels. The boundary is not standardized, so it is more useful to classify a system by its primary job than by the label on the vendor's website.
+**MarTech**[^g-martech] is technology for the broader management of marketing and the customer lifecycle: customer data, communications, and the advertiser's owned channels. The boundary is not standardized, so it is more useful to classify a system by its primary job than by the label on the vendor's website.
 
 | Question | AdTech | MarTech |
 |---|---|---|
@@ -265,7 +265,7 @@ The overlap is large. Measurement, attribution, identity, CDP, and activation ca
 
 1. Digital advertising is a market of coordination between advertiser, publisher, and user, not just the delivery of a banner.
 2. The advertiser creates demand, the publisher creates supply; the sides of the market must not be confused with platform names.
-3. Advertising inventory is available or forecastable opportunities, not users and not pre-manufactured impressions.
+3. Advertising inventory is available or projected opportunities, not users and not pre-manufactured impressions.
 4. `Placement`, `ad opportunity`, and `impression` are different stages: a placement rule, an arisen opportunity, and a registered event.
 5. AdTech exists because of scale, fragmentation, the speed of selection, delivery, interoperability, measurement, and settlements.
 6. Intermediaries perform functions; no category is required to be present in every deal.

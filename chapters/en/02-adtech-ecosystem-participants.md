@@ -142,7 +142,7 @@ The word `data` hides several different tasks. Supplying an external dataset, ma
 
 | Role | Customer and inputs | Persistent state | Output / activation | What the role itself does not do |
 |---|---|---|---|---|
-| **Data provider**[^g-data-provider] | Advertiser, publisher, or platform; its own or collected datasets | Datasets, attributes, or segments | Data for permitted activation, decisioning, or analysis | Not required to store the customer's customer record or make media decisions |
+| **Data provider**[^g-data-provider] | Advertiser, publisher, or platform; its own or collected datasets | Datasets, attributes, or segments | Data for permitted activation, decisioning, or analysis | Not required to store the end customer's record or make media decisions |
 | **DMP**[^g-dmp] | Advertising/marketing team; audience data and campaign signals | Audience profiles and segments in the chosen product model | Segmentation and activation through advertising integrations | Not required to be the system of record for the full customer lifecycle |
 | **CDP**[^g-cdp] | Advertiser; first-party events and customer data from the product, CRM, and other systems | Persistent unified customer record | Customer profiles, events, and segments made available to downstream systems | Not required to buy media or assign attribution credit |
 | **Identity provider**[^g-identity-provider] | Advertiser, publisher, or platform; identifiers from permitted sources | A mapping or identity graph within the specific solution | Linked or translated identifiers for activation and measurement | Does not create consent, does not register all events, and does not prove the identity of a real person |

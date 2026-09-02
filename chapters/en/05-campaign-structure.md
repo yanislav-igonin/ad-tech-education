@@ -92,7 +92,7 @@ ad:       where and under which parent rules this creative runs,
 | Ad | Delivery unit | Ad inside an ad group | Ad with a parent `adset_id` and creative reference |
 | Creative | Content and assets | Assets/ad content | A separate `creative_id` can be reused |
 
-Below is a teaching tree, not the payload of a real API:
+Below is an illustrative tree, not the payload of a real API:
 
 ```json
 {
@@ -179,8 +179,8 @@ The billing basis[^g-billable-event], as shown in the previous chapter, is set s
 
 | Axis | Main question | Example constraint |
 |---|---|---|
-| Targeting | For which opportunities/users/contexts is a showing possible? | Geo `DE`, mobile devices, keyword category, audience exclusion |
-| Placement | Where exactly is a showing possible? | Feed, search results, in-app rewarded slot |
+| Targeting | For which opportunities/users/contexts is delivery possible? | Geo `DE`, mobile devices, keyword category, audience exclusion |
+| Placement | Where exactly is delivery possible? | Feed, search results, in-app rewarded slot |
 
 An API may store placements inside an object named `targeting`; that is the nesting of a specific product, not proof that audience and placement are one concept. An opportunity must pass the constraints of both axes.
 
@@ -201,7 +201,7 @@ So the objective is not the optimization event; the placement is not the audienc
 
 ## Resources and time: budget and schedule
 
-Even a correctly chosen decision policy acts only within resource and time constraints. The **budget** caps the available spend on a given scope and time basis. It guarantees neither inventory, nor conversions, nor even pacing of spend, nor an exact invoice amount.
+Even a correctly chosen decision policy acts only within resource and time constraints. The **budget** caps the available spend on a given scope and time basis. It guarantees neither inventory, nor conversions, nor an even rate of spend, nor an exact invoice amount.
 
 Two temporal semantics are common:
 
@@ -217,7 +217,7 @@ Scope also varies. A budget may belong to a campaign, be shared between campaign
 | Shared budget | Several campaigns | Currency on a shared pool | The shared resource of the group | A fixed share for each child |
 | Bid target/cap | Strategy scope | Currency per predicted/result unit | The decision policy or a bid constraint | Total spend and the number of results |
 
-In the running example the campaign gets a **teaching** lifetime budget of `€700` for a seven-day flight and contains two ad sets. You cannot automatically write down `€100/day`: the available opportunities and allocation may change, and pacing may distribute spend unevenly. Nor can you conclude, without the product configuration, that each ad set will get `€350`.
+In the running example the campaign gets an **illustrative** lifetime budget of `€700` for a seven-day flight and contains two ad sets. You cannot automatically write down `€100/day`: the available opportunities and allocation may change, and pacing may distribute spend unevenly. Nor can you conclude, without the product configuration, that each ad set will get `€350`.
 
 The **schedule**, or **flight**, defines temporal eligibility:
 
@@ -258,7 +258,7 @@ measurement path:
   install → trial → paid_subscription events → reporting/optimization
 ```
 
-A teaching URL may pass internal identifiers:
+An illustrative URL may pass internal identifiers:
 
 ```text
 https://example.com/app?campaign_id=cmp_subscriptions_42&ad_id=ad_7
@@ -367,7 +367,7 @@ Pause does not have to precede completion. A campaign can end on the end date st
 - **Objective, optimization event, tracked conversion, and billing basis need not coincide.** They are different configuration and contract layers.
 - **A bid strategy is not an actual bid.** The strategy is the policy; a bid is one concrete decision.
 - **A budget does not promise spend or results.** It is a resource constraint, not a forecast and not an invoice.
-- **Enabled does not mean delivering right now.** Parent status, schedule, review, budget, errors, and eligibility can stop the showing.
+- **Enabled does not mean delivering right now.** Parent status, schedule, review, budget, errors, and eligibility can stop delivery.
 - **Learning does not mean inactive.** The optimizer can adapt during active delivery.
 - **Pause does not mean completed.** Pause is reversible; completion usually follows the end condition.
 - **A tracking URL is not a landing page.** The measurement path and the user path solve different problems.

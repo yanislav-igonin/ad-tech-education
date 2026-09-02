@@ -92,7 +92,7 @@ An **impression** is a recorded ad event according to the counting rule of a spe
 | `non-viewable` | Measurement occurred, the criteria were not met | That the impression was non-measurable |
 | `non-measurable` / undetermined | The available signals are insufficient to determine viewability | That the impression was viewable or non-viewable |
 
-The MRC Desktop Display Impression Measurement Guidelines, updated in October 2017, require, for a qualified client-side count, that the creative was downloaded and the render at least began. The MRC Viewable Guidelines v2.0, updated in August 2015, tie a viewable impression[^g-viewable-impression] to a valid rendered served impression. The classic benchmark from the 2017 Digital Audience-Based Standard is at least 50% of pixels for one continuous second for display and two continuous seconds for video. This is not a universal rule for every format and environment: MRC separately publishes the 2016 Mobile Viewable Guidelines, the Digital Video Guidelines with a 2018 update, the 2021 OTT/CTV/SSAI Guidelines, the In-Game Guidelines with a 2022 update, and the 2024 AR Guidelines. Deep viewability methodology belongs to chapter 37.
+The MRC Desktop Display Impression Measurement Guidelines, updated in October 2017, require, for a qualified client-side count, that the creative was downloaded and the render at least began. The MRC Viewable Guidelines v2.0, updated in August 2015, tie a viewable impression[^g-viewable-impression] to a valid rendered served impression. The classic benchmark from the MRC Digital Audience-Based Standard (2017) is at least 50% of pixels for one continuous second for display and two continuous seconds for video.
 
 ### Reach and frequency: from events to audience
 
@@ -113,7 +113,7 @@ frequency = qualifying impressions / reached unique entities
 
 A textbook example: 60,000 qualifying viewable impressions in a week are distributed across 20,000 de-duplicated persons from the chosen population. The reach count is 20,000 persons, and the average frequency is `60,000 / 20,000 = 3`. This does not mean every person saw the ad exactly three times: frequency is an average.
 
-The MRC Digital Audience-Based Measurement Standard (2017) uses qualifying viewable impressions as its measurement basis. Product dashboards may count reach on a different impression basis, by devices, or with modeling. That is why `reach` and `frequency` are comparable only with identical entity, exposure rule, population, de-dup scope, and period.
+The MRC Digital Audience-Based Standard (2017) uses qualifying viewable impressions as its measurement basis. Product dashboards may count reach on a different impression basis, by devices, or with modeling. That is why `reach` and `frequency` are comparable only with identical entity, exposure rule, population, de-dup scope, and period.
 
 ## From exposure to response and outcome
 

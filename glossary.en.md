@@ -118,6 +118,7 @@ Definitions of the course's key terms. In the chapters, these terms are marked w
 **Programmatic** — automated buying and selling of advertising: decisions about each opportunity are made by systems, not people. RTB is only one of its mechanisms; programmatic also includes automated reserved and direct mechanics without an auction. Programmatic is part of AdTech, but not all of AdTech.
 
 **Example:** a guaranteed deal — "impressions from the sports section at a fixed price via an automated agreement" — is programmatic without a real-time auction.
+
 ### Creative {#g-creative}
 
 **Creative** — the advertising material that is delivered and shown to the user: a banner, a video, a native format, a playable. Along with targeting rules it is an object of delivery and must match the format and rules of the publisher's environment; for a campaign, several creatives are usually prepared.
@@ -225,6 +226,7 @@ Definitions of the course's key terms. In the chapters, these terms are marked w
 **Metric contract** — the complete definition of a metric by which its number can be reproduced and interpreted: the event definition, measurement point, filters and deduplication, numerator/denominator, dimensions, period and windows, currency, perspective, and ledger boundary. A metric's name without a contract does not fix its meaning: the same formula on different contracts answers different questions.
 
 **Example:** `CTR = 2%` from an ad server over rendered impressions and filtered clicks is not the same number as `CTR = 2%` from a platform over served impressions and all clicks: the names match, the contracts differ.
+
 ### Click {#g-click}
 
 **Click** — a qualifying user-initiated interaction with an ad, recorded under a specific system's rule. Even a single action has several measurement points: initiated, measured (click tracker), received (destination), and resolved (landing page) clicks need not match due to dropped connections, redirect chains, and filters.
@@ -332,6 +334,7 @@ Definitions of the course's key terms. In the chapters, these terms are marked w
 **ROI (Return on Investment)** — the profitability of a broader investment scope: `ROI = net profit / total relevant investment cost = (return − total relevant cost) / total relevant cost`. Unlike ROAS, it uses the full chosen cost scope, not just ad spend.
 
 **Example:** a return of $480 at a full cost of $600 — a net profit of −$120 and an ROI of −20%, although the ROAS on media spend is 5.0x.
+
 ### ARPU (Average Revenue per User) {#g-arpu}
 
 **ARPU (Average Revenue per User)** — the selected revenue across all eligible users of the chosen population or cohort for a period: `ARPU = selected revenue / all eligible users`. It requires a user definition, revenue categories (purchase, subscription, ad), a period, and a cohort/population; it includes non-paying users.
@@ -439,6 +442,7 @@ Definitions of the course's key terms. In the chapters, these terms are marked w
 **Gross billings** — the amount invoiced to clients or passed through collection before excluding supplier components; a broader quantity than recognized revenue and not its synonym. Billings describe billing, not the principal/agent accounting conclusion.
 
 **Example:** under an agent conclusion the platform shows gross billings of `$100` with receivables/payables, while the recognized revenue is only the net fee of `$20`.
+
 ### Cost of revenue {#g-cost-of-revenue}
 
 **Cost of revenue (CoR)** — the expenses that the reporting entity classifies as directly connected with earning the recognized revenue under its policy. Not just any cash outflow: the composition is determined by the company's policy, and operating expenses, interest, and taxes sit below gross profit.
@@ -521,7 +525,7 @@ Definitions of the course's key terms. In the chapters, these terms are marked w
 
 **Budget** — a constraint on the available spend over a given scope (a campaign, an ad set, a shared pool of several campaigns) and time basis. Common are the daily budget (a hard calendar cap, an average daily target, or another form — the product defines this) and the lifetime/flight budget for the whole interval. A budget constrains spending but does not guarantee inventory, conversions, even pacing, or an exact invoice amount.
 
-**Example:** a campaign received a lifetime budget of €700 for a seven-day flight with two ad sets — you cannot conclude either €100/day or €350 for each ad set: the allocation depends on the opportunities and the product configuration.
+**Example:** a campaign received a lifetime budget of €700 for a seven-day flight with two ad sets — you cannot conclude either €100 per day or €350 for each ad set: the allocation depends on the opportunities and the product configuration.
 
 ### Pacing {#g-pacing}
 
@@ -549,6 +553,6 @@ Definitions of the course's key terms. In the chapters, these terms are marked w
 
 ### Learning phase {#g-learning-phase}
 
-**Learning phase (learning status)** — the state of the optimizer in which the delivery/bidding model gathers evidence after launch or a material configuration change: the earlier data describe the new decisions worse. Learning is one of the axes of the operational state alongside the configured, effective, and review statuses, not the opposite of active: impressions and spend continue, and vendor-specific significant edits (targeting, creative, optimization event, the set of ads, the bid strategy) can return the optimizer to learning without changing the configured status.
+**Learning phase (learning status)** — the state of the optimizer in which the delivery/bidding model gathers evidence after launch or a material configuration change: earlier data describe the new decisions less accurately. Learning is one of the axes of the operational state alongside the configured, effective, and review statuses, not the opposite of active: impressions and spend continue, and vendor-specific significant edits (targeting, creative, optimization event, the set of ads, the bid strategy) can return the optimizer to learning without changing the configured status.
 
 **Example:** an ad set with stable delivery on installs is switched to the optimization event `paid_subscription` — the configured status remains `active`, but the optimizer is back in learning until it has gathered enough data on the new event.
