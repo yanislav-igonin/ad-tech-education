@@ -1,0 +1,40 @@
+---
+import type { Locale } from '../lib/i18n';
+
+interface Props {
+  /** Локаль текущей страницы. */
+  locale: Locale;
+  /**
+   * Путь-аналог в другой локали (со слэшем) или null, если аналога нет —
+   * переключатель целиком прячется (спецификация PRI-71).
+   */
+  alternate: string | null;
+}
+
+const { locale, alternate } = Astro.props;
+const BASE = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+const other: Locale = locale === 'ru' ? 'en' : 'ru';
+const otherHref = alternate ? `${BASE}${alternate.replace(/^\//, '')}` : null;
+---
+
+{
+  otherHref && (
+    <nav class="langs" aria-label={locale === 'ru' ? 'Переключить язык' : 'Switch language'}>
+      <span class="langs__current" aria-current="true">
+        {locale.toUpperCase()}
+      </span>
+      <a
+        class="langs__link"
+        href={otherHref}
+        hreflang={other}
+        lang={other}
+        aria-label={other === 'en' ? 'English version' : 'Русская версия'}
+      >
+        {other.toUpperCase()}
+      </a>
+    </nav>
+  )
+}

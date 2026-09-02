@@ -4,6 +4,7 @@ import { ClientRouter } from 'astro:transitions';
 import { chapterHref, downloadHref, type Chapter } from '../lib/book';
 import { UI, type Locale } from '../lib/i18n';
 import SearchPalette from '../components/SearchPalette.astro';
+import LangSwitch from '../components/LangSwitch.astro';
 
 interface Props {
   title: string;
@@ -62,6 +63,7 @@ const glossaryHref = `${BASE}${locale === 'en' ? 'en/' : ''}glossary/`;
         <span>AdTech Education</span>
         <b>{ui.brandSubtitle}</b>
       </a>
+      <LangSwitch locale={locale} alternate={alternate} />
       {
         parts.map((p) => (
           <>

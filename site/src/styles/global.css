@@ -172,6 +172,41 @@ body {
 
 .spine__dl a:hover { border-color: var(--gold); background: rgba(216, 162, 74, 0.1); }
 
+/* ---- Language switcher ---- */
+
+.langs {
+  display: inline-flex;
+  gap: 0.25rem;
+  margin: -1.1rem 0 1.5rem;
+}
+
+.langs__link,
+.langs__current {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.22rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid #3a3222;
+}
+
+.langs__current {
+  color: var(--spine-ink);
+  border-color: var(--gold);
+  background: rgba(216, 162, 74, 0.14);
+}
+
+.langs__link {
+  color: var(--spine-dim);
+  text-decoration: none;
+}
+
+.langs__link:hover {
+  color: var(--spine-ink);
+  border-color: var(--gold);
+}
+
 /* ---- Page ---- */
 
 .page {
