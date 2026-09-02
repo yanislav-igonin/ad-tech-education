@@ -13,7 +13,7 @@ PDF_EN := $(DL)/adtech-en.pdf
 
 epub: $(EPUB_RU)
 pdf: $(PDF_RU)
-artifacts: epub pdf
+artifacts: epub pdf epub-en pdf-en
 epub-en: $(EPUB_EN)
 pdf-en: $(PDF_EN)
 artifacts-en: epub-en pdf-en
