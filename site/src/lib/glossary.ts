@@ -1,12 +1,19 @@
-// Глоссарий — единый источник определений: glossary.md в корне репозитория.
-// Сноски в главах ([^g-id]) получают определения отсюда же, поэтому текст
-// термина нигде не дублируется.
+// Глоссарий — единый источник определений: glossary.md (ru) и glossary.en.md
+// (en) в корне репозитория. Сноски в главах ([^g-id]) получают определения
+// отсюда же, поэтому текст термина нигде не дублируется.
 //
 // Парсим на строковом уровне: markdown-движок сайта не поддерживает
 // атрибуты заголовков {#g-id}, а нам нужен явный id термина.
+//
+// en-файл может отсутствовать (перевод ещё не готов) — тогда en-локаль
+// прозрачно откатывается к ru-определениям.
 
+import { existsSync, readFileSync } from 'node:fs';
+import path from 'node:path';
 import { markdownToHtml } from 'satteri';
 import glossarySrc from '../../../glossary.md?raw';
+import type { Locale } from './i18n';
+
 
 export type GlossaryTerm = {
   /** 'rtb' из заголовка `### RTB (real-time bidding) {#g-rtb}` */
@@ -50,22 +57,34 @@ function parseGlossary(src: string): GlossaryTerm[] {
   return terms;
 }
 
-let cached: GlossaryTerm[] | null = null;
-
-export function glossaryTerms(): GlossaryTerm[] {
-  cached ??= parseGlossary(glossarySrc);
-  return cached;
-}
+let cachedRu: GlossaryTerm[] | null = null;
+let cachedEn: GlossaryTerm[] | null | undefined; // undefined = ещё не читали файл
 
 /**
- * Footnote-definitions для главы: satteri рендерит их в секцию сносок,
- * если в тексте главы есть маркеры [^g-id].
+ * Корень репозитория: сборка идёт из site/, но cwd может быть и корнем.
+ * Файл глоссария лежит в корне репозитория рядом с site/.
  */
-export function glossaryDefsMd(): string {
-  return glossaryTerms()
-    .map((t) => `[^g-${t.id}]: ${t.definitionMd}`)
-    .join('\n');
+function readRootFile(name: string): string | null {
+  for (const base of [process.cwd(), path.resolve(process.cwd(), '..')]) {
+    const p = path.join(base, name);
+    if (existsSync(p)) return readFileSync(p, 'utf8');
+  }
+  return null;
 }
+
+export function glossaryTerms(locale: Locale = 'ru'): GlossaryTerm[] {
+  if (locale === 'en') {
+    if (cachedEn === undefined) {
+      const enSrc = readRootFile('glossary.en.md');
+      // Фолбэк: если en-глоссарий ещё не переведён, показываем ru-термины.
+      cachedEn = enSrc ? parseGlossary(enSrc) : null;
+    }
+    return cachedEn ?? glossaryTerms('ru');
+  }
+  cachedRu ??= parseGlossary(glossarySrc);
+  return cachedRu;
+}
+
 
 /** HTML статьи термина — для страницы глоссария. */
 export async function glossaryTermHtml(term: GlossaryTerm): Promise<string> {

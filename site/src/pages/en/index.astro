@@ -1,14 +1,14 @@
 ---
-import { getBook, chapterHref, downloadHref } from '../lib/book';
-import { UI, enCounterpart, fill } from '../lib/i18n';
-import Book from '../layouts/Book.astro';
+import { getBook, chapterHref, downloadHref } from '../../lib/book';
+import { UI, ruCounterpart, fill } from '../../lib/i18n';
+import Book from '../../layouts/Book.astro';
 
-const ui = UI.ru;
-const { chapters, parts } = await getBook('ru');
-const alternate = enCounterpart('/');
+const ui = UI.en;
+const { chapters, parts } = await getBook('en');
+const alternate = ruCounterpart('/en/');
 ---
 
-<Book title={ui.homeTitle} parts={parts} locale="ru" alternate={alternate}>
+<Book title={ui.homeTitle} parts={parts} locale="en" alternate={alternate}>
   <section class="home">
     <p class="home__kicker">{fill(ui.homeKicker, { year: new Date().getFullYear() })}</p>
     <h1 class="home__title">{ui.homeH1}</h1>
@@ -39,7 +39,7 @@ const alternate = enCounterpart('/');
                     <input type="checkbox" data-read-toggle={ch.data.id} />
                   </label>
                   <span class="toc__num">{ch.data.chapter}</span>
-                  <a class="toc__link" data-read-link={ch.data.id} href={chapterHref(ch, 'ru')}>
+                  <a class="toc__link" data-read-link={ch.data.id} href={chapterHref(ch, 'en')}>
                     {ch.data.title}
                   </a>
                   {ch.data.status !== 'final' && <span class="toc__status">{ch.data.status}</span>}

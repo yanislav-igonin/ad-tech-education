@@ -1,5 +1,13 @@
 ---
 import { glossaryTerms } from '../lib/glossary';
+import { UI, type Locale } from '../lib/i18n';
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = 'ru' } = Astro.props;
+const ui = UI[locale];
 
 // Мини-список терминов для палетки: инлайнится в HTML на билде, чтобы
 // Cmd/Ctrl+K сразу показывал определение без запросов к индексу.
@@ -10,28 +18,38 @@ const stripMd = (s: string) =>
     .replace(/\s+/g, ' ')
     .trim();
 
-const terms = glossaryTerms().map((t) => ({
+const terms = glossaryTerms(locale).map((t) => ({
   id: t.id,
   title: t.title,
   def: stripMd(t.definitionMd),
 }));
 const json = JSON.stringify(terms).replace(/</g, '\\u003c');
+// Строки, которые скрипт вставляет в DOM уже на клиенте.
+const uiJson = JSON.stringify({
+  empty: ui.searchEmpty,
+  glossaryMeta: ui.searchGlossaryMeta,
+  glossaryHref: locale === 'en' ? '/en/glossary/' : '/glossary/',
+}).replace(/</g, '\\u003c');
 ---
 
 <div class="cmdk" id="cmdk" hidden>
   <div class="cmdk__backdrop" data-cmdk-close></div>
-  <div class="cmdk__panel" role="dialog" aria-modal="true" aria-label="Поиск по учебнику">
+  <div class="cmdk__panel" role="dialog" aria-modal="true" aria-label={ui.searchDialogAria}>
     <input
       class="cmdk__input"
       type="search"
-      placeholder="Поиск по главам и глоссарию…"
-      aria-label="Поиск по учебнику"
+      placeholder={ui.searchPlaceholder}
+      aria-label={ui.searchDialogAria}
     />
-    <div class="cmdk__results" role="listbox" aria-label="Результаты поиска"></div>
-    <p class="cmdk__hint"><kbd>↑</kbd><kbd>↓</kbd> навигация · <kbd>Enter</kbd> открыть · <kbd>Esc</kbd> закрыть</p>
+    <div class="cmdk__results" role="listbox" aria-label={ui.searchDialogAria}></div>
+    <p class="cmdk__hint">
+      <kbd>↑</kbd><kbd>↓</kbd> {ui.searchHintNav} · <kbd>Enter</kbd> {ui.searchHintOpen} ·
+      <kbd>Esc</kbd> {ui.searchHintClose}
+    </p>
   </div>
 </div>
 <script type="application/json" id="cmdk-glossary" set:html={json} />
+<script type="application/json" id="cmdk-ui" set:html={uiJson} />
 
 <script>
   // Командная палетка: Cmd/Ctrl+K → глоссарий + полнотекстовый поиск Pagefind.
@@ -40,6 +58,7 @@ const json = JSON.stringify(terms).replace(/</g, '\\u003c');
   import { navigate } from 'astro:transitions/client';
   type Term = { id: string; title: string; def: string };
   type Row = { title: string; excerpt: string; href: string; meta: string | null; term: boolean };
+  type UiStrings = { empty: string; glossaryMeta: string; glossaryHref: string };
 
   const BASE = import.meta.env.BASE_URL.endsWith('/')
     ? import.meta.env.BASE_URL
@@ -47,6 +66,9 @@ const json = JSON.stringify(terms).replace(/</g, '\\u003c');
 
   const terms: Term[] = JSON.parse(
     document.getElementById('cmdk-glossary')?.textContent ?? '[]',
+  );
+  const uiStrings: UiStrings = JSON.parse(
+    document.getElementById('cmdk-ui')?.textContent ?? '{}',
   );
 
   // Pagefind лениво грузит WASM и чанки индекса при первом поиске.
@@ -102,7 +124,7 @@ const json = JSON.stringify(terms).replace(/</g, '\\u003c');
     const { list } = nodes();
     if (!list) return;
     if (rows.length === 0) {
-      list.innerHTML = `<p class="cmdk__empty">Ничего не нашлось</p>`;
+      list.innerHTML = `<p class="cmdk__empty">${esc(uiStrings.empty ?? '')}</p>`;
       return;
     }
     list.innerHTML = rows
@@ -166,8 +188,8 @@ const json = JSON.stringify(terms).replace(/</g, '\\u003c');
         found.push({
           title: t.title,
           excerpt: esc(t.def),
-          href: `${BASE}glossary/#g-${t.id}`,
-          meta: 'Глоссарий',
+          href: `${uiStrings.glossaryHref ?? `${BASE}glossary/`}#g-${t.id}`,
+          meta: uiStrings.glossaryMeta ?? null,
           term: true,
         });
       }

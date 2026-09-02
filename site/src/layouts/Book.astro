@@ -1,25 +1,52 @@
 ---
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
-import { href, downloadHref, type Chapter } from '../lib/book';
+import { chapterHref, downloadHref, type Chapter } from '../lib/book';
+import { UI, type Locale } from '../lib/i18n';
 import SearchPalette from '../components/SearchPalette.astro';
 
 interface Props {
   title: string;
   parts: { part: string; label: string; chapters: Chapter[] }[];
   current?: Chapter | null;
+  /** Локаль страницы; ru живёт в корне, en — под /en/. */
+  locale?: Locale;
+  /**
+   * Путь страницы-аналога в другой локали (со слэшем) или null, если
+   * аналога нет — из него собираются hreflang-ссылки и переключатель языка.
+   */
+  alternate?: string | null;
 }
 
-const { title, parts, current = null } = Astro.props;
+const { title, parts, current = null, locale = 'ru', alternate = null } = Astro.props;
+const ui = UI[locale];
 const BASE = import.meta.env.BASE_URL;
+const SITE = Astro.site ?? new URL('https://adtech101.h0b0.dev');
+
+const selfUrl = new URL(
+  Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`,
+  SITE,
+);
+const ruUrl = locale === 'ru' ? selfUrl : alternate ? new URL(alternate, SITE) : null;
+const enUrl = locale === 'en' ? selfUrl : alternate ? new URL(alternate, SITE) : null;
+
+const glossaryHref = `${BASE}${locale === 'en' ? 'en/' : ''}glossary/`;
 ---
 
 <!doctype html>
-<html lang="ru">
+<html
+  lang={locale}
+  data-pagefind-lang={locale}
+  data-progress-template={ui.progressTemplate}
+>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    <link rel="canonical" href={selfUrl.href} />
+    {ruUrl && <link rel="alternate" hreflang="ru" href={ruUrl.href} />}
+    {enUrl && <link rel="alternate" hreflang="en" href={enUrl.href} />}
+    {ruUrl && <link rel="alternate" hreflang="x-default" href={ruUrl.href} />}
     <link rel="icon" type="image/svg+xml" href={`${BASE}favicon.svg`} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -29,11 +56,11 @@ const BASE = import.meta.env.BASE_URL;
     />
     <ClientRouter />
   </head>
-  <body>
+  <body data-glossary-href={glossaryHref} data-glossary-tip={ui.glossaryTip}>
     <aside class="spine">
       <a class="spine__brand" href={BASE}>
         <span>AdTech Education</span>
-        <b>Книга по рекламным технологиям</b>
+        <b>{ui.brandSubtitle}</b>
       </a>
       {
         parts.map((p) => (
@@ -44,7 +71,7 @@ const BASE = import.meta.env.BASE_URL;
                 <li>
                   <a
                     class="spine__link"
-                    href={href(ch)}
+                    href={chapterHref(ch, locale)}
                     aria-current={current?.data.id === ch.data.id ? 'page' : undefined}
                   >
                     <span class="spine__num">{ch.data.chapter}</span>
@@ -56,18 +83,18 @@ const BASE = import.meta.env.BASE_URL;
           </>
         ))
       }
-      <p class="spine__part">Справочник</p>
+      <p class="spine__part">{ui.reference}</p>
       <ul class="spine__list">
         <li>
-          <a class="spine__link" href={`${BASE}glossary/`}>
+          <a class="spine__link" href={glossaryHref}>
             <span class="spine__num">*</span>
-            Глоссарий
+            {ui.glossary}
           </a>
         </li>
       </ul>
       <div class="spine__actions">
-        <button class="spine__search" type="button" data-cmdk-open aria-label="Поиск (Cmd/Ctrl+K)">
-          <span>Поиск</span>
+        <button class="spine__search" type="button" data-cmdk-open aria-label={ui.searchAria}>
+          <span>{ui.search}</span>
           <kbd>⌘K</kbd>
         </button>
       </div>
@@ -108,9 +135,10 @@ const BASE = import.meta.env.BASE_URL;
         document.querySelectorAll<HTMLElement>('[data-read-link]').forEach((el) => {
           el.classList.toggle('is-done', Boolean(map[el.dataset.readLink ?? '']));
         });
+        const tmpl = document.documentElement.dataset.progressTemplate ?? '{done} из {total}';
         document.querySelectorAll<HTMLElement>('[data-progress-total]').forEach((el) => {
           const total = Number(el.dataset.progressTotal);
-          el.textContent = `${done} из ${total}`;
+          el.textContent = tmpl.replace('{done}', String(done)).replace('{total}', String(total));
           const fill = el.parentElement?.querySelector<HTMLElement>('[data-progress-fill]');
           if (fill) fill.style.width = total ? `${(done / total) * 100}%` : '0';
         });
@@ -159,10 +187,6 @@ const BASE = import.meta.env.BASE_URL;
         if (w.__glosstipBound) return;
         w.__glosstipBound = true;
 
-        const BASE = import.meta.env.BASE_URL.endsWith('/')
-          ? import.meta.env.BASE_URL
-          : `${import.meta.env.BASE_URL}/`;
-
         const hide = () => tip?.classList.remove('is-open');
 
         const show = (a: HTMLAnchorElement) => {
@@ -178,8 +202,8 @@ const BASE = import.meta.env.BASE_URL;
           if (termId) {
             const more = document.createElement('a');
             more.className = 'glosstip__more';
-            more.href = `${BASE}glossary/#g-${termId}`;
-            more.textContent = 'Глоссарий →';
+            more.href = `${document.body.dataset.glossaryHref ?? '/glossary/'}#g-${termId}`;
+            more.textContent = document.body.dataset.glossaryTip ?? 'Глоссарий →';
             tip.append(more);
           }
           const r = a.getBoundingClientRect();
@@ -221,6 +245,6 @@ const BASE = import.meta.env.BASE_URL;
       document.addEventListener('DOMContentLoaded', initGlosstip);
     </script>
 
-    <SearchPalette />
+    <SearchPalette locale={locale} />
   </body>
 </html>

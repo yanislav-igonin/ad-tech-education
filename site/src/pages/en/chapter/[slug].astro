@@ -1,32 +1,28 @@
 ---
-import { getCollection, render, type CollectionEntry } from 'astro:content';
-import { getBook, chapterHref, navOf } from '../../lib/book';
-import { UI, enCounterpart, fill } from '../../lib/i18n';
-import Book from '../../layouts/Book.astro';
+import { render, type CollectionEntry } from 'astro:content';
+import { getBook, chapterHref, navOf } from '../../../lib/book';
+import { UI, ruCounterpart, fill } from '../../../lib/i18n';
+import Book from '../../../layouts/Book.astro';
 
 export async function getStaticPaths() {
-  const { chapters } = await getBook('ru');
+  const { chapters } = await getBook('en');
   return chapters.map((chapter) => ({ params: { slug: chapter.data.slug }, props: { chapter } }));
 }
 
-type Props = { chapter: CollectionEntry<'chapters'> };
+type Props = { chapter: CollectionEntry<'chaptersEn'> };
 
 const { chapter } = Astro.props;
-const ui = UI.ru;
-const { chapters, parts } = await getBook('ru');
+const ui = UI.en;
+const { chapters, parts } = await getBook('en');
 const { prev, next } = navOf(chapters, chapter);
 const { Content, headings } = await render(chapter);
 const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 const partLabel = parts.find((p) => p.part === chapter.data.part)?.label ?? chapter.data.part;
 const byId = new Map(chapters.map((c) => [c.data.id, c]));
-const enSlugs = new Set((await getCollection('chaptersEn')).map((c) => c.data.slug));
-const alternate = enCounterpart(
-  Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`,
-  enSlugs,
-);
+const alternate = ruCounterpart(Astro.url.pathname);
 ---
 
-<Book title={`${chapter.data.title} — AdTech Education`} parts={parts} current={chapter} locale="ru" alternate={alternate}>
+<Book title={`${chapter.data.title} — AdTech Education`} parts={parts} current={chapter} locale="en" alternate={alternate}>
   <article class="chapter">
     <p class="chapter__crumb">{fill(ui.chapterCrumb, { part: partLabel, chapter: chapter.data.chapter })}</p>
     <div class="chapter__head">
@@ -43,7 +39,7 @@ const alternate = enCounterpart(
                   return (
                     <>
                       {i > 0 && ', '}
-                      {pre ? <a href={chapterHref(pre, 'ru')}>{pre.data.title}</a> : pid}
+                      {pre ? <a href={chapterHref(pre, 'en')}>{pre.data.title}</a> : pid}
                     </>
                   );
                 })}
@@ -80,7 +76,7 @@ const alternate = enCounterpart(
     <nav class="pager">
       {
         prev && (
-          <a href={chapterHref(prev, 'ru')}>
+          <a href={chapterHref(prev, 'en')}>
             <small>{fill(ui.pagerPrev, { n: prev.data.chapter })}</small>
             <b>{prev.data.title}</b>
           </a>
@@ -88,7 +84,7 @@ const alternate = enCounterpart(
       }
       {
         next && (
-          <a class="pager--next" href={chapterHref(next, 'ru')}>
+          <a class="pager--next" href={chapterHref(next, 'en')}>
             <small>{fill(ui.pagerNext, { n: next.data.chapter })}</small>
             <b>{next.data.title}</b>
           </a>

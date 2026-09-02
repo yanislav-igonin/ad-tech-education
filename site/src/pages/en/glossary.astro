@@ -1,18 +1,18 @@
 ---
-import { getBook } from '../lib/book';
-import { UI, enCounterpart } from '../lib/i18n';
-import Book from '../layouts/Book.astro';
-import { glossaryTerms, glossaryTermHtml } from '../lib/glossary';
+import { getBook } from '../../lib/book';
+import { UI, ruCounterpart } from '../../lib/i18n';
+import Book from '../../layouts/Book.astro';
+import { glossaryTerms, glossaryTermHtml } from '../../lib/glossary';
 
-const ui = UI.ru;
-const { parts } = await getBook('ru');
+const ui = UI.en;
+const { parts } = await getBook('en');
 const terms = await Promise.all(
-  glossaryTerms('ru').map(async (term) => ({ ...term, html: await glossaryTermHtml(term) })),
+  glossaryTerms('en').map(async (term) => ({ ...term, html: await glossaryTermHtml(term) })),
 );
-const alternate = enCounterpart('/glossary/');
+const alternate = ruCounterpart('/en/glossary/');
 ---
 
-<Book title={ui.glossaryDocTitle} parts={parts} locale="ru" alternate={alternate}>
+<Book title={ui.glossaryDocTitle} parts={parts} locale="en" alternate={alternate}>
   <article class="chapter">
     <p class="chapter__crumb">{ui.reference}</p>
     <div class="chapter__head">
